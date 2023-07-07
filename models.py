@@ -33,11 +33,22 @@ class Tag(abstract.AbstractTagModel):
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
 
+class Necropolis(abstract.AbstractBaseModel):
+    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Free-form, non-indexed placename of the site."))
+    geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
+    description = RichTextField(null=True, blank=True, verbose_name=_("description"))
+    comment  = models.TextField(null=True, blank=True, verbose_name=_("comment"))
+    tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
+
+    class Meta:
+        verbose_name = _("Necropolis")
+
 # Tomb
 class Tomb(abstract.AbstractBaseModel):
     
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Free-form, non-indexed placename of the site."))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
+    necropolis = models.ForeignKey(Necropolis, blank=True, null=True, verbose_name=_("necropolis"), on_delete=models.CASCADE)
     description = RichTextField(null=True, blank=True, verbose_name=_("description"))
     comment  = models.TextField(null=True, blank=True, verbose_name=_("comment"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
@@ -49,6 +60,7 @@ class Tomb(abstract.AbstractBaseModel):
 
     class Meta:
         verbose_name = _("Tomb")
+        verbose_name_plural = _("Tombs")
 
 class Role(abstract.AbstractBaseModel):
     role_name = models.CharField(verbose_name= _("role"), max_length=255, blank=True, null=True)
@@ -57,8 +69,8 @@ class Role(abstract.AbstractBaseModel):
         return f"{self.role_name}"
 
     class Meta:
-        verbose_name = _("role")
-        verbose_name_plural = _("roles")
+        verbose_name = _("Role")
+        verbose_name_plural = _("Roles")
 
 
 # Creator
@@ -96,7 +108,7 @@ class Image(abstract.AbstractTIFFImageModel):
 
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     photographer = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="photographer")
-    place   = models.ForeignKey(Tomb, null=True, blank=True, on_delete=models.CASCADE, related_name="image_location")
+    tomb = models.ForeignKey(Tomb, null=True, blank=True, on_delete=models.CASCADE, related_name="image_location")
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of photography"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
@@ -114,7 +126,7 @@ class Image(abstract.AbstractTIFFImageModel):
 class Video(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     photographer = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="director")
-    place  = models.ForeignKey(Tomb, null=True, blank=True, on_delete=models.CASCADE, related_name="video_location")
+    tomb = models.ForeignKey(Tomb, null=True, blank=True, on_delete=models.CASCADE, related_name="video_location")
     link = models.URLField(blank=True, null=True, help_text=("Video link in GU Play"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of video"))
@@ -129,7 +141,7 @@ class Observation(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     creator = models.ForeignKey(Creator, on_delete=models.CASCADE, null=True, blank=True, related_name="researcher")
     document = models.FileField(null=True, blank=True, storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"))
-    place   = models.ForeignKey(Tomb, null=True, blank=True, on_delete=models.CASCADE, related_name="research_location")
+    tomb   = models.ForeignKey(Tomb, null=True, blank=True, on_delete=models.CASCADE, related_name="research_location")
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
     date = models.DateField(null=True, blank=True, help_text=("Date of tacking note"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))

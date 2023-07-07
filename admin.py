@@ -11,9 +11,9 @@ from django.contrib.admin import EmptyFieldListFilter
 from django.conf import settings
 
 
-DEFAULT_LONGITUDE =  10.5000
-DEFAULT_LATITUDE  = 79.5000
-DEFAULT_ZOOM = 8
+DEFAULT_LONGITUDE =  12.1096
+DEFAULT_LATITUDE  = 42.4209
+DEFAULT_ZOOM = 10
 
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
@@ -31,9 +31,26 @@ class CreatorAdmin(admin.ModelAdmin):
     
 
 @admin.register(Tomb)
-class PlaceAdmin(admin.GISModelAdmin):
+class TombAdmin(admin.GISModelAdmin):
 
     fields              = get_fields(Tomb, exclude=['id'])
+    readonly_fields     = [*DEFAULT_FIELDS]
+    list_display = ['name', 'necropolis', 'geometry', 'description', 'comment']
+    search_fields = ['name', 'necropolis']
+    autocomplete_fields = ['tag']
+
+    gis_widget_kwargs = {
+        'attrs': {
+            'default_lon' : DEFAULT_LONGITUDE,
+            'default_lat' : DEFAULT_LATITUDE,
+            'default_zoom' : DEFAULT_ZOOM,
+        },
+    }
+
+@admin.register(Necropolis)
+class NecropolisAdmin(admin.GISModelAdmin):
+
+    fields              = get_fields(Necropolis, exclude=['id'])
     readonly_fields     = [*DEFAULT_FIELDS]
     list_display = ['name', 'geometry', 'description', 'comment']
     search_fields = ['name']
@@ -46,7 +63,6 @@ class PlaceAdmin(admin.GISModelAdmin):
             'default_zoom' : DEFAULT_ZOOM,
         },
     }
-
 
 
 @admin.register(ImageTypeTag)
@@ -79,9 +95,9 @@ class ImageModel(admin.ModelAdmin):
 
     fields              = ['image_preview', *get_fields(Image, exclude=['id'])]
     readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
-    autocomplete_fields = ['photographer', 'place', 'tag', 'focus', 'type']
-    list_display = ['title', 'thumbnail_preview', 'photographer', 'place', 'date', 'description', 'type']
-    search_fields = ['title', 'photographer', 'place', 'date', 'type']
+    autocomplete_fields = ['photographer', 'tomb', 'tag', 'focus', 'type']
+    list_display = ['title', 'thumbnail_preview', 'photographer', 'tomb', 'date', 'description', 'type']
+    search_fields = ['title', 'photographer', 'tomb', 'date', 'type']
 
     list_per_page = 10
 
@@ -99,13 +115,13 @@ class RePhotographyAdmin(admin.ModelAdmin):
 
 @admin.register(Video)
 class VideoModel(admin.ModelAdmin):
-    autocomplete_fields = ['photographer', 'place', 'tag', 'focus']
-    list_display = ['title', 'photographer', 'place', 'link', 'date', 'description']
-    search_fields = ['title', 'photographer', 'place', 'date']
+    autocomplete_fields = ['photographer', 'tomb', 'tag', 'focus']
+    list_display = ['title', 'photographer', 'tomb', 'link', 'date', 'description']
+    search_fields = ['title', 'photographer', 'tomb', 'date']
 
 
 @admin.register(Observation)
 class ObservationModel(admin.ModelAdmin):
-    autocomplete_fields = ['creator', 'place', 'tag', 'focus']
-    list_display = ['title', 'creator', 'place', 'date', 'description']
-    search_fields = ['title', 'creator', 'place', 'date']
+    autocomplete_fields = ['creator', 'tomb', 'tag', 'focus']
+    list_display = ['title', 'creator', 'tomb', 'date', 'description']
+    search_fields = ['title', 'creator', 'tomb', 'date']

@@ -5,11 +5,17 @@ from diana.utils import get_fields, DEFAULT_FIELDS
 from .models import *
 
 
-class PlaceSerializer(DynamicDepthSerializer):
+class TombSerializer(DynamicDepthSerializer):
 
     class Meta:
         model = Tomb
         fields = ['id']+get_fields(Tomb, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])
+
+class NecropolisSerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = Necropolis
+        fields = ['id']+get_fields(Necropolis, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])
 
 
 class TombGeoSerializer(GeoFeatureModelSerializer):
