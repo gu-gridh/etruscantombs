@@ -30,10 +30,10 @@ class CreatorAdmin(admin.ModelAdmin):
     search_fields = ['name', 'role']
     
 
-@admin.register(Place)
+@admin.register(Tomb)
 class PlaceAdmin(admin.GISModelAdmin):
 
-    fields              = get_fields(Place, exclude=['id'])
+    fields              = get_fields(Tomb, exclude=['id'])
     readonly_fields     = [*DEFAULT_FIELDS]
     list_display = ['name', 'geometry', 'description', 'comment']
     search_fields = ['name']

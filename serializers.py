@@ -8,15 +8,15 @@ from .models import *
 class PlaceSerializer(DynamicDepthSerializer):
 
     class Meta:
-        model = Place
-        fields = ['id']+get_fields(Place, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])
+        model = Tomb
+        fields = ['id']+get_fields(Tomb, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])
 
 
-class PlaceGeoSerializer(GeoFeatureModelSerializer):
+class TombGeoSerializer(GeoFeatureModelSerializer):
 
     class Meta:
-        model = Place
-        fields = ['id']+get_fields(Place, exclude=DEFAULT_FIELDS)
+        model = Tomb
+        fields = ['id']+get_fields(Tomb, exclude=DEFAULT_FIELDS)
         geo_field = 'geometry'
         depth = 1
 

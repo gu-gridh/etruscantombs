@@ -6,9 +6,9 @@ from diana.abstract.views import DynamicDepthViewSet, GeoViewSet
 from diana.abstract.models import get_fields, DEFAULT_FIELDS
 
 
-class PlaceViewSet(DynamicDepthViewSet):
+class TombViewSet(DynamicDepthViewSet):
     serializer_class = serializers.PlaceSerializer
-    filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
+    filterset_fields = get_fields(models.Tomb, exclude=DEFAULT_FIELDS + ['geometry'])
     search_fields = ['placename']
 
     def dispatch(self, request, *args, **kwargs):
@@ -20,7 +20,7 @@ class PlaceViewSet(DynamicDepthViewSet):
         elif model_name == 'observation':
             self.model_type = models.Observation
 
-        return super(PlaceViewSet, self).dispatch(request, *args, **kwargs)
+        return super(TombViewSet, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         # queryset = models.Place.objects.all()
@@ -41,7 +41,7 @@ class PlaceViewSet(DynamicDepthViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Place.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
                 
             else:
                 objects_type = self.model_type.objects.all()
@@ -55,29 +55,29 @@ class PlaceViewSet(DynamicDepthViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Place.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
 
         else:
             if start_date and end_date:
-                queryset = models.Place.objects.all().filter(
+                queryset = models.Tomb.objects.all().filter(
                     Q(id__in=list(models.Image.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
                 )
             elif start_date:
-                queryset = models.Place.objects.all().filter(
+                queryset = models.Tomb.objects.all().filter(
                     Q(id__in=list(models.Image.filter(date__year__gte=start_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.filter(date__year__gte=start_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.filter(date__year__gte=start_date).values_list('place', flat=True)))
                 )
             elif end_date:
-                queryset = models.Place.objects.all().filter(
+                queryset = models.Tomb.objects.all().filter(
                     Q(id__in=list(models.Image.filter(date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.filter(date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.filter(date__year__lte=end_date).values_list('place', flat=True)))
                 )
             else:
-                queryset = models.Place.objects.all().filter(
+                queryset = models.Tomb.objects.all().filter(
                      Q(id__in=list(models.Image.objects.all().values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.objects.all().values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.objects.all().values_list('place', flat=True)))
@@ -85,11 +85,11 @@ class PlaceViewSet(DynamicDepthViewSet):
                 
         return queryset
 
-class PlaceGeoViewSet(GeoViewSet):
+class TombGeoViewSet(GeoViewSet):
 
     # queryset = models.Place.objects.all()
-    serializer_class = serializers.PlaceGeoSerializer
-    filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
+    serializer_class = serializers.TombGeoSerializer
+    filterset_fields = get_fields(models.Tomb, exclude=DEFAULT_FIELDS + ['geometry'])
     search_fields = ['placename']
     bbox_filter_field = 'geometry'
     bbox_filter_include_overlapping = True
@@ -102,7 +102,7 @@ class PlaceGeoViewSet(GeoViewSet):
             self.model_type = models.Video
         elif model_name == 'observation':
             self.model_type = models.Observation
-        return super(PlaceGeoViewSet, self).dispatch(request, *args, **kwargs)
+        return super(TombGeoViewSet, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         # queryset = models.Place.objects.all()
@@ -123,7 +123,7 @@ class PlaceGeoViewSet(GeoViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Place.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
                 
             else:
                 objects_type = self.model_type.objects.all()
@@ -137,29 +137,29 @@ class PlaceGeoViewSet(GeoViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Place.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
 
         else:
             if start_date and end_date:
-                queryset = models.Place.objects.all().filter(
+                queryset = models.Tomb.objects.all().filter(
                     Q(id__in=list(models.Image.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
                 )
             elif start_date:
-                queryset = models.Place.objects.all().filter(
+                queryset = models.Tomb.objects.all().filter(
                     Q(id__in=list(models.Image.objects.filter(date__year__gte=start_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.objects.filter(date__year__gte=start_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.objects.filter(date__year__gte=start_date).values_list('place', flat=True)))
                 )
             elif end_date:
-                queryset = models.Place.objects.all().filter(
+                queryset = models.Tomb.objects.all().filter(
                     Q(id__in=list(models.Image.objects.filter(date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.objects.filter(date__year__lte=end_date).values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.objects.filter(date__year__lte=end_date).values_list('place', flat=True)))
                 )
             else:
-                queryset = models.Place.objects.all().filter(
+                queryset = models.Tomb.objects.all().filter(
                      Q(id__in=list(models.Image.objects.all().values_list('place', flat=True)))
                     |Q(id__in=list(models.Video.objects.all().values_list('place', flat=True)))
                     |Q(id__in=list(models.Observation.objects.all().values_list('place', flat=True)))
@@ -167,14 +167,14 @@ class PlaceGeoViewSet(GeoViewSet):
                 
         return queryset
 
-class FocusGeoViewSet(GeoViewSet):
+# class FocusGeoViewSet(GeoViewSet):
 
-    serializer_class = serializers.FocusSerializer
-    # queryset = models.Focus.objects.all()
-    queryset = models.Focus.objects.all().filter(id__in=list(models.Image.objects.all().values_list('focus', flat=True)))
-    filterset_fields = get_fields(models.Focus, exclude=DEFAULT_FIELDS + ['place'])
-    search_fields = ['name']
-    bbox_filter_field = 'place'
+#     serializer_class = serializers.FocusSerializer
+#     # queryset = models.Focus.objects.all()
+#     queryset = models.Focus.objects.all().filter(id__in=list(models.Image.objects.all().values_list('focus', flat=True)))
+#     filterset_fields = get_fields(models.Focus, exclude=DEFAULT_FIELDS + ['place'])
+#     search_fields = ['name']
+#     bbox_filter_field = 'place'
 
 # Create your views here.
 class IIIFImageViewSet(DynamicDepthViewSet):
@@ -234,15 +234,15 @@ class TypeSearchViewSet(DynamicDepthViewSet):
 
 
 class TagSearchViewSet(GeoViewSet):
-    serializer_class = serializers.PlaceGeoSerializer
-    filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
+    serializer_class = serializers.TombGeoSerializer
+    filterset_fields = get_fields(models.Tomb, exclude=DEFAULT_FIELDS + ['geometry'])
     search_fields = ['placename']
     bbox_filter_field = 'geometry'
     bbox_filter_include_overlapping = True
 
     def get_queryset(self):
         q = self.request.GET["tag_set"]
-        queryset = models.Place.objects.all().filter(Q(id__in=list(models.Image.objects.filter(tag__text__icontains=q).values_list('place', flat=True)))|
+        queryset = models.Tomb.objects.all().filter(Q(id__in=list(models.Image.objects.filter(tag__text__icontains=q).values_list('place', flat=True)))|
                                                     Q(id__in=list(models.Video.objects.filter(tag__text__icontains=q).values_list('place', flat=True))) |
                                                     Q(id__in=list(models.Observation.objects.filter(tag__text__icontains=q).values_list('place', flat=True))))
         return queryset
