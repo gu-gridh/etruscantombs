@@ -34,21 +34,25 @@ class Tag(abstract.AbstractTagModel):
         verbose_name_plural = _("Tags")
 
 class Necropolis(abstract.AbstractBaseModel):
-    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Free-form, non-indexed placename of the site."))
+    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Free-form, non-indexed placename of the Necropolis."))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     description = RichTextField(null=True, blank=True, verbose_name=_("description"))
     comment  = models.TextField(null=True, blank=True, verbose_name=_("comment"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = _("Necropolis")
+        verbose_name_plural = _("Necropolis")
 
 # Tomb
 class Tomb(abstract.AbstractBaseModel):
     
-    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Free-form, non-indexed placename of the site."))
+    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Free-form, non-indexed placename of the Tomb."))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
-    necropolis = models.ForeignKey(Necropolis, blank=True, null=True, verbose_name=_("necropolis"), on_delete=models.CASCADE)
+    necropolis = models.ForeignKey(Necropolis, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("necropolis"))
     description = RichTextField(null=True, blank=True, verbose_name=_("description"))
     comment  = models.TextField(null=True, blank=True, verbose_name=_("comment"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
@@ -143,7 +147,7 @@ class Observation(abstract.AbstractBaseModel):
     document = models.FileField(null=True, blank=True, storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"))
     tomb   = models.ForeignKey(Tomb, null=True, blank=True, on_delete=models.CASCADE, related_name="research_location")
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the motif"))
-    date = models.DateField(null=True, blank=True, help_text=("Date of tacking note"))
+    date = models.DateField(null=True, blank=True, help_text=("Date of taking note"))
     focus = models.ForeignKey(Focus, null=True, blank=True, on_delete=models.CASCADE, help_text=("what is documented, also a place on a map"))
     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
 

@@ -11,8 +11,8 @@ from django.contrib.admin import EmptyFieldListFilter
 from django.conf import settings
 
 
-DEFAULT_LONGITUDE =  12.1096
-DEFAULT_LATITUDE  = 42.4209
+DEFAULT_LONGITUDE =  11.99
+DEFAULT_LATITUDE  = 42.22
 DEFAULT_ZOOM = 10
 
 @admin.register(Role)
