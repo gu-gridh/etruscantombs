@@ -157,13 +157,13 @@ class Observation(abstract.AbstractBaseModel):
 # 3D models
 # We don't have any information about this type of data.
 
-# Re-photography
-class RePhotography(abstract.AbstractBaseModel):
-    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    old_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="old_image")
-    new_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="new_image")
-    tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
-    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the rephotography"))
+# # Re-photography
+# class RePhotography(abstract.AbstractBaseModel):
+#     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
+#     old_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="old_image")
+#     new_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="new_image")
+#     tag = models.ManyToManyField(Tag, blank=True, verbose_name=_("tags"))
+#     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the rephotography"))
 
-    def __str__(self) -> str:
-        return f"{self.title}"
+#     def __str__(self) -> str:
+#         return f"{self.title}"

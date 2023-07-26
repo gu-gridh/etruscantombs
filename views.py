@@ -285,20 +285,20 @@ class ObservationViewSet(DynamicDepthViewSet):
     serializer_class = serializers.ObservationSerializer
     filterset_fields = get_fields(models.Observation, exclude=DEFAULT_FIELDS+['document'])
 
-class RePhotographyViewSet(DynamicDepthViewSet):
+# class RePhotographyViewSet(DynamicDepthViewSet):
     
-    # queryset = models.RePhotography.objects.all()
-    serializer_class = serializers.RePhotographySerializer
-    filterset_fields = get_fields(models.RePhotography, exclude=DEFAULT_FIELDS)
+#     # queryset = models.RePhotography.objects.all()
+#     serializer_class = serializers.RePhotographySerializer
+#     filterset_fields = get_fields(models.RePhotography, exclude=DEFAULT_FIELDS)
 
 
-    def get_queryset(self):
-        queryset = models.RePhotography.objects.all()
-        if self.request.query_params.get('place'):
-            place_id = self.request.query_params.get('place')
-            queryset = models.RePhotography.objects.filter(old_image__place=place_id)
+#     def get_queryset(self):
+#         queryset = models.RePhotography.objects.all()
+#         if self.request.query_params.get('place'):
+#             place_id = self.request.query_params.get('place')
+#             queryset = models.RePhotography.objects.filter(old_image__place=place_id)
             
-        return queryset
+#         return queryset
     
 
 class TypeSearchViewSet(DynamicDepthViewSet):
@@ -327,12 +327,12 @@ class TagSearchViewSet(GeoViewSet):
         return queryset
 
     
-class RephotographyFocusSearch(DynamicDepthViewSet):
-    serializer_class = serializers.RePhotographySerializer
-    filterset_fields = get_fields(models.RePhotography, exclude=DEFAULT_FIELDS)
+# class RephotographyFocusSearch(DynamicDepthViewSet):
+#     serializer_class = serializers.RePhotographySerializer
+#     filterset_fields = get_fields(models.RePhotography, exclude=DEFAULT_FIELDS)
 
-    def get_queryset(self):
-        focus_id = self.request.GET["focus_id"]
-        queryset = models.RePhotography.objects.filter(new_image__focus=focus_id)
-        return queryset
+#     def get_queryset(self):
+#         focus_id = self.request.GET["focus_id"]
+#         queryset = models.RePhotography.objects.filter(new_image__focus=focus_id)
+#         return queryset
     

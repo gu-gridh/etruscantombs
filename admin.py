@@ -108,9 +108,9 @@ class ImageModel(admin.ModelAdmin):
         return format_html(f'<img src="{settings.IIIF_URL}{obj.iiif_file}/full/full/0/default.jpg" height="100" />')
 
 
-@admin.register(RePhotography)
-class RePhotographyAdmin(admin.ModelAdmin):
-    list_display = ['old_image', 'new_image']
+# @admin.register(RePhotography)
+# class RePhotographyAdmin(admin.ModelAdmin):
+#     list_display = ['old_image', 'new_image']
 
 
 @admin.register(Video)

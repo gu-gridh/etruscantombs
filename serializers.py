@@ -56,8 +56,8 @@ class ObservationSerializer(DynamicDepthSerializer):
         fields = ['id']+get_fields(Observation, exclude=DEFAULT_FIELDS)
 
 
-class RePhotographySerializer(DynamicDepthSerializer):
+# class RePhotographySerializer(DynamicDepthSerializer):
 
-    class Meta:
-        model = RePhotography
-        fields = ['id']+get_fields(RePhotography, exclude=DEFAULT_FIELDS)
+#     class Meta:
+#         model = RePhotography
+#         fields = ['id']+get_fields(RePhotography, exclude=DEFAULT_FIELDS)
