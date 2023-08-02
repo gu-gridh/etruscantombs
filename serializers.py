@@ -27,6 +27,15 @@ class TombGeoSerializer(GeoFeatureModelSerializer):
         depth = 1
 
 
+class NecropolisGeoSerializer(GeoFeatureModelSerializer):
+
+    class Meta:
+        model = Necropolis
+        fields = ['id']+get_fields(Necropolis, exclude=DEFAULT_FIELDS)
+        geo_field = 'geometry'
+        depth = 1
+
+
 class FocusSerializer(GeoFeatureModelSerializer):
 
     class Meta:

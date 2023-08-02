@@ -41,7 +41,7 @@ class TombViewSet(DynamicDepthViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('tomb', flat=True)))
                 
             else:
                 objects_type = self.model_type.objects.all()
@@ -55,32 +55,32 @@ class TombViewSet(DynamicDepthViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('tomb', flat=True)))
 
         else:
             if start_date and end_date:
                 queryset = models.Tomb.objects.all().filter(
-                    Q(id__in=list(models.Image.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
+                    Q(id__in=list(models.Image.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
                 )
             elif start_date:
                 queryset = models.Tomb.objects.all().filter(
-                    Q(id__in=list(models.Image.filter(date__year__gte=start_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date).values_list('place', flat=True)))
+                    Q(id__in=list(models.Image.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
                 )
             elif end_date:
                 queryset = models.Tomb.objects.all().filter(
-                    Q(id__in=list(models.Image.filter(date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.filter(date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.filter(date__year__lte=end_date).values_list('place', flat=True)))
+                    Q(id__in=list(models.Image.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
                 )
             else:
                 queryset = models.Tomb.objects.all().filter(
-                     Q(id__in=list(models.Image.objects.all().values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.objects.all().values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.objects.all().values_list('place', flat=True)))
+                     Q(id__in=list(models.Image.objects.all().values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.all().values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.all().values_list('tomb', flat=True)))
                 )
                 
         return queryset
@@ -123,7 +123,7 @@ class TombGeoViewSet(GeoViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('tomb', flat=True)))
                 
             else:
                 objects_type = self.model_type.objects.all()
@@ -137,32 +137,32 @@ class TombGeoViewSet(GeoViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Tomb.objects.all().filter(id__in=list(objects_type.values_list('tomb', flat=True)))
 
         else:
             if start_date and end_date:
                 queryset = models.Tomb.objects.all().filter(
-                    Q(id__in=list(models.Image.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
+                    Q(id__in=list(models.Image.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
                 )
             elif start_date:
                 queryset = models.Tomb.objects.all().filter(
-                    Q(id__in=list(models.Image.objects.filter(date__year__gte=start_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.objects.filter(date__year__gte=start_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.objects.filter(date__year__gte=start_date).values_list('place', flat=True)))
+                    Q(id__in=list(models.Image.objects.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
                 )
             elif end_date:
                 queryset = models.Tomb.objects.all().filter(
-                    Q(id__in=list(models.Image.objects.filter(date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.objects.filter(date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.objects.filter(date__year__lte=end_date).values_list('place', flat=True)))
+                    Q(id__in=list(models.Image.objects.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
                 )
             else:
                 queryset = models.Tomb.objects.all().filter(
-                     Q(id__in=list(models.Image.objects.all().values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.objects.all().values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.objects.all().values_list('place', flat=True)))
+                     Q(id__in=list(models.Image.objects.all().values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.all().values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.all().values_list('tomb', flat=True)))
                 )
                 
         return queryset
@@ -202,7 +202,90 @@ class NecropolisViewSet(DynamicDepthViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Necropolis.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Necropolis.objects.all().filter(id__in=list(objects_type.values_list('tomb', flat=True)))
+                    
+            else:
+                objects_type = self.model_type.objects.all()
+
+                if start_date and end_date:
+                    objects_type = objects_type.filter(date__year__gte=start_date, date__year__lte=end_date)
+                elif start_date:
+                    objects_type = objects_type.filter(date__year__gte=start_date)
+                elif end_date:
+                    objects_type = objects_type.filter(date__year__lte=end_date)
+                else:
+                    objects_type = objects_type.all()
+
+                queryset = models.Necropolis.objects.all().filter(id__in=list(objects_type.values_list('tomb', flat=True)))
+
+        else:
+            if start_date and end_date:
+                queryset = models.Necropolis.objects.all().filter(
+                    Q(id__in=list(models.Image.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
+                )
+            elif start_date:
+                queryset = models.Necropolis.objects.all().filter(
+                    Q(id__in=list(models.Image.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
+                )
+            elif end_date:
+                queryset = models.Necropolis.objects.all().filter(
+                    Q(id__in=list(models.Image.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
+                )
+            else:
+                queryset = models.Necropolis.objects.all().filter(
+                     Q(id__in=list(models.Image.objects.all().values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.all().values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.all().values_list('tomb', flat=True)))
+                )
+                
+        return queryset
+
+
+class NecropolisGeoViewSet(GeoViewSet):
+
+    # queryset = models.Place.objects.all()
+    serializer_class = serializers.NecropolisGeoSerializer
+    filterset_fields = get_fields(models.Necropolis, exclude=DEFAULT_FIELDS + ['geometry'])
+    search_fields = ['placename']
+    bbox_filter_field = 'geometry'
+    bbox_filter_include_overlapping = True
+
+    def dispatch(self, request, *args, **kwargs):
+        model_name = request.GET.get('type')
+        if model_name == 'image':
+            self.model_type = models.Image
+        elif model_name == 'video':
+            self.model_type = models.Video
+        elif model_name == 'observation':
+            self.model_type = models.Observation
+        return super(NecropolisGeoViewSet, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        # queryset = models.Place.objects.all()
+        model_type = self.request.query_params.get('type')
+        start_date = self.request.query_params.get('start_date')
+        end_date = self.request.query_params.get('end_date')
+
+        if model_type:
+            if model_type == 'art' or model_type== 'drawing':
+                objects_type = models.Image.objects.all().filter(type__text__icontains=model_type)
+
+                if start_date and end_date:
+                    objects_type = objects_type.filter(date__year__gte=start_date, date__year__lte=end_date)
+                elif start_date:
+                    objects_type = objects_type.filter(date__year__gte=start_date)
+                elif end_date:
+                    objects_type = objects_type.filter(date__year__lte=end_date)
+                else:
+                    objects_type = objects_type.all()
+
+                queryset = models.Necropolis.objects.all().filter(id__in=list(objects_type.values_list('tomb', flat=True)))
                 
             else:
                 objects_type = self.model_type.objects.all()
@@ -216,35 +299,36 @@ class NecropolisViewSet(DynamicDepthViewSet):
                 else:
                     objects_type = objects_type.all()
 
-                queryset = models.Necropolis.objects.all().filter(id__in=list(objects_type.values_list('place', flat=True)))
+                queryset = models.Necropolis.objects.all().filter(id__in=list(objects_type.values_list('tomb', flat=True)))
 
         else:
             if start_date and end_date:
                 queryset = models.Necropolis.objects.all().filter(
-                    Q(id__in=list(models.Image.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('place', flat=True)))
+                    Q(id__in=list(models.Image.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.filter(date__year__gte=start_date, date__year__lte=end_date).values_list('tomb', flat=True)))
                 )
             elif start_date:
                 queryset = models.Necropolis.objects.all().filter(
-                    Q(id__in=list(models.Image.filter(date__year__gte=start_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.filter(date__year__gte=start_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.filter(date__year__gte=start_date).values_list('place', flat=True)))
+                    Q(id__in=list(models.Image.objects.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.filter(date__year__gte=start_date).values_list('tomb', flat=True)))
                 )
             elif end_date:
                 queryset = models.Necropolis.objects.all().filter(
-                    Q(id__in=list(models.Image.filter(date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.filter(date__year__lte=end_date).values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.filter(date__year__lte=end_date).values_list('place', flat=True)))
+                    Q(id__in=list(models.Image.objects.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.filter(date__year__lte=end_date).values_list('tomb', flat=True)))
                 )
             else:
                 queryset = models.Necropolis.objects.all().filter(
-                     Q(id__in=list(models.Image.objects.all().values_list('place', flat=True)))
-                    |Q(id__in=list(models.Video.objects.all().values_list('place', flat=True)))
-                    |Q(id__in=list(models.Observation.objects.all().values_list('place', flat=True)))
+                     Q(id__in=list(models.Image.objects.all().values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Video.objects.all().values_list('tomb', flat=True)))
+                    |Q(id__in=list(models.Observation.objects.all().values_list('tomb', flat=True)))
                 )
                 
         return queryset
+
 
 # class FocusGeoViewSet(GeoViewSet):
 

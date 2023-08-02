@@ -10,6 +10,7 @@ documentation = utils.build_app_api_documentation("etruscantombs", endpoint)
 
 router.register(rf'{endpoint}/geojson/tomb', views.TombGeoViewSet, basename='tomb on geojson')
 router.register(rf'{endpoint}/necropolis', views.NecropolisViewSet, basename='necropolis')
+router.register(rf'{endpoint}/geojson/necropolis', views.NecropolisGeoViewSet, basename='necropolis on geojson')
 router.register(rf'{endpoint}/tomb', views.TombViewSet, basename='tomb')
 router.register(rf'{endpoint}/image', views.IIIFImageViewSet, basename='image')
 router.register(rf'{endpoint}/observation', views.ObservationViewSet, basename='observation')
