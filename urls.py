@@ -26,10 +26,8 @@ urlpatterns = [
     path('', include(router.urls)),
 
     # Automatically generated views
-    *utils.get_model_urls('etruscantombs', endpoint, 
-        exclude=['image', 'tomb', 'focus', 'observation']),
+    *utils.get_model_urls('etruscantombs', endpoint,  exclude=['image', 'tomb', 'necropolis']),
 
-    *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'tomb', #'rephotography', 
-                                                                   'focus', 'observation']),
+    *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'tomb', 'necropolis']),
     *documentation
 ]
