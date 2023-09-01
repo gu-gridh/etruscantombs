@@ -5,68 +5,38 @@ from diana.utils import get_fields, DEFAULT_FIELDS
 from .models import *
 
 
-class TombSerializer(DynamicDepthSerializer):
+class PlaceSerializer(DynamicDepthSerializer):
 
     class Meta:
-        model = Tomb
-        fields = ['id']+get_fields(Tomb, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])
-
-class NecropolisSerializer(DynamicDepthSerializer):
-
-    class Meta:
-        model = Necropolis
-        fields = ['id']+get_fields(Necropolis, exclude=DEFAULT_FIELDS+['min_year', 'max_year'])
+        model = Place
+        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id']
 
 
-class TombGeoSerializer(GeoFeatureModelSerializer):
+class PlaceGeoSerializer(GeoFeatureModelSerializer):
 
     class Meta:
-        model = Tomb
-        fields = ['id']+get_fields(Tomb, exclude=DEFAULT_FIELDS)
+        model = Place
+        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id']
         geo_field = 'geometry'
         depth = 1
 
-
-class NecropolisGeoSerializer(GeoFeatureModelSerializer):
-
-    class Meta:
-        model = Necropolis
-        fields = ['id']+get_fields(Necropolis, exclude=DEFAULT_FIELDS)
-        geo_field = 'geometry'
-        depth = 1
-
-
-class FocusSerializer(GeoFeatureModelSerializer):
-
-    class Meta:
-        model = Focus
-        fields = ['id']+get_fields(Focus, exclude=DEFAULT_FIELDS)
-        geo_field = 'place'
-        depth = 1
 
 class TIFFImageSerializer(DynamicDepthSerializer):
 
     class Meta:
         model = Image
-        fields = ['id']+get_fields(Image, exclude=DEFAULT_FIELDS)
+        fields = get_fields(Image, exclude=DEFAULT_FIELDS)+ ['id']
 
 
-class VideoSerializer(DynamicDepthSerializer):
-
-    class Meta:
-        model = Video
-        fields = ['id']+get_fields(Video, exclude=DEFAULT_FIELDS)
-
-
-class ObservationSerializer(DynamicDepthSerializer):
+class LayerSerializer(DynamicDepthSerializer):
 
     class Meta:
-        model = Observation
-        fields = ['id']+get_fields(Observation, exclude=DEFAULT_FIELDS)
+        model = Layer
+        fields = get_fields(Layer, exclude=DEFAULT_FIELDS)+ ['id']
 
 
-# class RePhotographySerializer(DynamicDepthSerializer):
+class SourceSerializer(DynamicDepthSerializer):
 
-#     class Meta:
-#         model = RePhotography
-#         fields = ['id']+get_fields(RePhotography, exclude=DEFAULT_FIELDS)
+    class Meta:
+        model = Source
+        fields = get_fields(Source, exclude=DEFAULT_FIELDS)+ ['id']
