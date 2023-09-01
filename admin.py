@@ -18,8 +18,8 @@ import base64
 from io import StringIO
 
 
-DEFAULT_LONGITUDE =  11.9946
-DEFAULT_LATITUDE  = 57.7089
+DEFAULT_LONGITUDE =  11.99
+DEFAULT_LATITUDE  = 42.22
 DEFAULT_ZOOM = 10
 
 @admin.register(Place)
