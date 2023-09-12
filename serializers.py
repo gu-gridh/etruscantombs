@@ -40,3 +40,9 @@ class SourceSerializer(DynamicDepthSerializer):
     class Meta:
         model = Source
         fields = get_fields(Source, exclude=DEFAULT_FIELDS)+ ['id']
+
+class Object3DSerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = Object3D
+        fields = get_fields(Object3D, exclude=DEFAULT_FIELDS)+ ['id']

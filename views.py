@@ -37,3 +37,10 @@ class LayerViewSet(DynamicDepthViewSet):
     queryset = models.Layer.objects.all()
     serializer_class = serializers.LayerSerializer
     filterset_fields = get_fields(models.Layer, exclude=DEFAULT_FIELDS)
+
+
+class Object3DViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Object3D.objects.all()
+    serializer_class = serializers.Object3DSerializer
+    filterset_fields = get_fields(models.Object3D, exclude=DEFAULT_FIELDS)

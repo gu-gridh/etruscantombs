@@ -76,3 +76,9 @@ class LayerAdmin(admin.ModelAdmin):
 class SourceAdmin(admin.ModelAdmin):
     list_display = [*get_fields(Source, exclude=['id'])]
     search_fields = ['title']
+
+
+@admin.register(Object3D)
+class Object3DAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Object3D, exclude=['id'])]
+    search_fields = ['title', 'place__name', 'type']

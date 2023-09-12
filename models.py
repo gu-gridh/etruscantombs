@@ -66,3 +66,20 @@ class Layer(abstract.AbstractBaseModel):
     type = models.CharField(max_length=32, null=True, blank=True)
     format = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpeg, png, etc."))
     description = RichTextField(null=True, blank=True, verbose_name=_("description"))
+
+
+class Object3D(abstract.AbstractBaseModel):
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
+    source_id = models.ForeignKey(Source, on_delete=models.CASCADE, null=True, blank=True)
+    place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="object3D")
+    type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the object can be 3D-hop or cloudpoint"))
+    link_3Dhop = models.CharField(max_length=1024, blank=True, null=True)
+    link_cloudpoint = models.CharField(max_length=1024, blank=True, null=True)
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
+
+    def __str__(self) -> str:
+        return f"{self.title}"
+    
+    class Meta:
+        verbose_name = _("Object 3D")
+        verbose_name_plural = _("Objects 3D")
