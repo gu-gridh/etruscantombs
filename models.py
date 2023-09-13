@@ -8,17 +8,23 @@ from markdownfield.models import MarkdownField, RenderedMarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 # Create your models here.
 
-class ImageTypeTag(abstract.AbstractTagModel):
+# QUESTION: are dates for types of documentation (Document, Image, Object3D) related to Source or should they be independent?
+# TODO: add author?
+# TODO: add Plans
+# TODO: add Observation (simple text)
+
+class Tag(abstract.AbstractTagModel):
     
     class Meta:
-        verbose_name = _("Type of image")
-        verbose_name_plural = _("Types of image")
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
 
     def __str__(self) -> str:
         return self.text
     
     def __repr__(self) -> str:
         return str(self)
+    
 
 # Place
 class Place(abstract.AbstractBaseModel):
@@ -32,6 +38,9 @@ class Place(abstract.AbstractBaseModel):
 
     class Meta:
         verbose_name = _("Place")
+
+    #TODO : add tag (inherit from ImageTypeTag)
+    #TODO : add tomb date (category)
 
 
 class Source(abstract.AbstractBaseModel):
@@ -58,6 +67,8 @@ class Image(abstract.AbstractTIFFImageModel):
     def __str__(self) -> str:
         return f"{self.title}"
     
+    # TODO : add date of image (is it separate from Source)
+    
 
 class Layer(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
@@ -74,7 +85,7 @@ class Object3D(abstract.AbstractBaseModel):
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="object3D")
     type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the object can be 3D-hop or cloudpoint"))
     link_3Dhop = models.CharField(max_length=1024, blank=True, null=True)
-    link_cloudpoint = models.CharField(max_length=1024, blank=True, null=True)
+    link_pointcloud = models.CharField(max_length=1024, blank=True, null=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
 
     def __str__(self) -> str:
@@ -83,3 +94,18 @@ class Object3D(abstract.AbstractBaseModel):
     class Meta:
         verbose_name = _("Object 3D")
         verbose_name_plural = _("Objects 3D")
+
+    # QUESTION: are 3D hop and pointcloud mutually exclusive
+    # TODO: split this into 3d hop and pointcloud
+    # TODO: write in parameters for each
+    # TODO: add date of colelction (is it separate from Source?)
+    # TODO: add preview image
+
+
+class Documentation(abstract.AbstractBaseModel):
+    """
+    title = 
+    place =
+    pdf_file_url = 
+    date = 
+    """

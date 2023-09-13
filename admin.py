@@ -37,8 +37,8 @@ class PlaceAdmin(LeafletGeoAdminMixin, admin.ModelAdmin,):
     }
 
 
-@admin.register(ImageTypeTag)
-class ImageTypeTagAdmin(admin.ModelAdmin):
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
     list_display = ['text']
     search_fields = ['text']
 
