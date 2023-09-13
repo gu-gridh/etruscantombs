@@ -72,10 +72,10 @@ class LayerAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 
-@admin.register(Source)
-class SourceAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Source, exclude=['id'])]
-    search_fields = ['title']
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Author, exclude=['id'])]
+    search_fields = ['author_firstname', 'author_lastname']
 
 
 @admin.register(Object3D)

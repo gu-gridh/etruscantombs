@@ -35,11 +35,11 @@ class LayerSerializer(DynamicDepthSerializer):
         fields = get_fields(Layer, exclude=DEFAULT_FIELDS)+ ['id']
 
 
-class SourceSerializer(DynamicDepthSerializer):
+class AuthorSerializer(DynamicDepthSerializer):
 
     class Meta:
-        model = Source
-        fields = get_fields(Source, exclude=DEFAULT_FIELDS)+ ['id']
+        model = Author
+        fields = get_fields(Author, exclude=DEFAULT_FIELDS)+ ['id']
 
 class Object3DSerializer(DynamicDepthSerializer):
 
