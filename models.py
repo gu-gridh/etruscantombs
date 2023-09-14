@@ -8,8 +8,8 @@ from markdownfield.models import MarkdownField, RenderedMarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 # Create your models here.
 
-# QUESTION: are dates for types of documentation (Document, Image, Object3D) related to Source or should they be independent?
-# TODO: add Plans
+# TODO: add Plan: images of the floor plan
+# TODO: add Document: Any document related to a Place 
 # TODO: add Observation (simple text)
 
 class Tag(abstract.AbstractTagModel):
@@ -25,21 +25,34 @@ class Tag(abstract.AbstractTagModel):
         return str(self)
     
 
+class Epoch(abstract.AbstractTagModel):
+    
+    class Meta:
+        verbose_name = _("Epoch")
+        verbose_name_plural = _("Epochs")
+
+    def __str__(self) -> str:
+        return self.text
+    
+    def __repr__(self) -> str:
+        return str(self)
+    
+
 # Place
 class Place(abstract.AbstractBaseModel):
     
-    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("this field refers to the placename"))
+    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Please enter the name of the tomb"))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
-    parent_id = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, help_text=_("Parent of this place"))
+    parent_id = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, help_text=_("If this tombs is attached to other tombs"))
     tags = models.ManyToManyField(Tag, null=True, blank=True)
-    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the place"))
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the tomb"))
+    date = models.ForeignKey(Epoch, on_delete=models.CASCADE, blank=True, null=True, help_text=_("Dating of the tomb"))
+
     def __str__(self) -> str:
         return self.name
 
     class Meta:
         verbose_name = _("Place")
-
-    #TODO : add tomb date (category)
 
 
 class Author(abstract.AbstractBaseModel):

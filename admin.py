@@ -43,9 +43,16 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ['text']
 
 
+@admin.register(Epoch)
+class EpochAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
 class PlaceFilter(AutocompleteFilter):
     title = _('Place') # display title
     field_name = 'place' # name of the foreign key field
+
 
 @admin.register(Image)
 class ImageModel(admin.ModelAdmin):
