@@ -94,19 +94,19 @@ class LayerAdmin(admin.ModelAdmin):
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
     list_display = [*get_fields(Author, exclude=['id'])]
-    search_fields = ['author_firstname', 'author_lastname']
+    search_fields = ['firstname', 'lastname']
 
 
-@admin.register(Object3D)
-class Object3DAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Object3D, exclude=['id'])]
+@admin.register(Object3DHop)
+class Object3DHopAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Object3DHop, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
 
 
-# @admin.register(FloorPlan)
-# class FloorPlanAdmin(admin.ModelAdmin):
-#     list_display = [*get_fields(FloorPlan, exclude=['id'])]
-#     search_fields = ['title', 'place__name', 'type']
+@admin.register(ObjectPointCloud)
+class ObjectPointCloudAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
+    search_fields = ['title', 'place__name', 'type']
 
 
 @admin.register(Document)

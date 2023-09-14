@@ -41,18 +41,18 @@ class AuthorSerializer(DynamicDepthSerializer):
         model = Author
         fields = get_fields(Author, exclude=DEFAULT_FIELDS)+ ['id']
 
-class Object3DSerializer(DynamicDepthSerializer):
+class Object3DHopSerializer(DynamicDepthSerializer):
 
     class Meta:
-        model = Object3D
-        fields = get_fields(Object3D, exclude=DEFAULT_FIELDS)+ ['id']
+        model = Object3DHop
+        fields = get_fields(Object3DHop, exclude=DEFAULT_FIELDS)+ ['id']
 
 
-# class FloorPlanSerializer(DynamicDepthSerializer):
+class ObjectPointCloudSerializer(DynamicDepthSerializer):
 
-#     class Meta:
-#         model = FloorPlan
-#         fields = get_fields(FloorPlan, exclude=DEFAULT_FIELDS)+ ['id']
+    class Meta:
+        model = Object3DHop
+        fields = get_fields(ObjectPointCloud, exclude=DEFAULT_FIELDS)+ ['id']
 
 
 class DocumentSerializer(DynamicDepthSerializer):
