@@ -89,3 +89,21 @@ class AuthorAdmin(admin.ModelAdmin):
 class Object3DAdmin(admin.ModelAdmin):
     list_display = [*get_fields(Object3D, exclude=['id'])]
     search_fields = ['title', 'place__name', 'type']
+
+
+@admin.register(FloorPlan)
+class FloorPlanAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(FloorPlan, exclude=['id'])]
+    search_fields = ['title', 'place__name', 'type']
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Document, exclude=['id'])]
+    search_fields = ['title', 'place__name', 'type']
+
+
+@admin.register(Observation)
+class ObservationAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Observation, exclude=['id'])]
+    search_fields = ['title', 'place__name', 'type']

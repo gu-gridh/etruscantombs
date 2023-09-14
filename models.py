@@ -6,6 +6,7 @@ from diana.storages import OriginalFileStorage
 from ckeditor.fields import RichTextField
 from markdownfield.models import MarkdownField, RenderedMarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
+from datetime import date
 # Create your models here.
 
 # TODO: add Plan: images of the floor plan
@@ -71,11 +72,12 @@ class Author(abstract.AbstractBaseModel):
 class Image(abstract.AbstractTIFFImageModel):
 
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    source_id = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="images")
     type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpeg, png, etc."))
     image_url = models.CharField(max_length=256, blank=True, null=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
+    date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -85,21 +87,23 @@ class Image(abstract.AbstractTIFFImageModel):
 
 class Layer(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    source_id = models.ForeignKey(Author, on_delete=models.CASCADE, blank=True, null=True)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     type = models.CharField(max_length=32, null=True, blank=True)
     format = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpeg, png, etc."))
     description = RichTextField(null=True, blank=True, verbose_name=_("description"))
 
 
+
 class Object3D(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    source_id = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="object3D")
     type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the object can be 3D-hop or cloudpoint"))
     link_3Dhop = models.CharField(max_length=1024, blank=True, null=True)
     link_pointcloud = models.CharField(max_length=1024, blank=True, null=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
+    date = models.DateField(default=date.today, help_text=_("Date in which the 3D object was created"))
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -115,10 +119,41 @@ class Object3D(abstract.AbstractBaseModel):
     # TODO: add preview image
 
 
-class Documentation(abstract.AbstractBaseModel):
-    """
-    title = 
-    place =
-    pdf_file_url = 
-    date = 
-    """
+class FloorPlan(abstract.AbstractBaseModel):
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
+    place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="floorplans")
+    image_url = models.CharField(max_length=256, blank=True, null=True)
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the floor plan"))
+    date = models.DateField(default=date.today, help_text=_("Date in which the floor plan was created"))
+
+    def __str__(self) -> str:
+        return f"{self.title}"
+    
+    class Meta:
+        verbose_name = _("Floor plan")
+        verbose_name_plural = _("Floor plans")
+
+
+class Document(abstract.AbstractBaseModel):
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
+    place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="documentation")
+    document_url = models.CharField(max_length=256, blank=True, null=True)
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the document"))
+    date = models.DateField(default=date.today, help_text=_("Date in which the document was created"))
+
+    def __str__(self) -> str:
+        return f"{self.title}"
+    
+    class Meta:
+        verbose_name = _("Document")
+
+
+class Observation(abstract.AbstractBaseModel):
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
+    place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="observation")
+    observation = RichTextField(null=True, blank=True, help_text=("Write observation here"))
+    date = models.DateField(default=date.today, help_text=_("Date in which the document was created"))
+    # QUESTION does this model needs a "related image" field? E.g. to update hand written notes

@@ -44,3 +44,24 @@ class Object3DViewSet(DynamicDepthViewSet):
     queryset = models.Object3D.objects.all()
     serializer_class = serializers.Object3DSerializer
     filterset_fields = get_fields(models.Object3D, exclude=DEFAULT_FIELDS)
+
+
+class FloorPlanViewSet(DynamicDepthViewSet):
+    
+    queryset = models.FloorPlan.objects.all()
+    serializer_class = serializers.FloorPlanSerializer
+    filterset_fields = get_fields(models.FloorPlan, exclude=DEFAULT_FIELDS)
+
+
+class DocumentViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Document.objects.all()
+    serializer_class = serializers.DocumentSerializer
+    filterset_fields = get_fields(models.Document, exclude=DEFAULT_FIELDS)
+
+
+class ObservationViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Observation.objects.all()
+    serializer_class = serializers.ObservationSerializer
+    filterset_fields = get_fields(models.Observation, exclude=DEFAULT_FIELDS)
