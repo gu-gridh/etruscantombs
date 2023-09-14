@@ -48,11 +48,11 @@ class Object3DSerializer(DynamicDepthSerializer):
         fields = get_fields(Object3D, exclude=DEFAULT_FIELDS)+ ['id']
 
 
-class FloorPlanSerializer(DynamicDepthSerializer):
+# class FloorPlanSerializer(DynamicDepthSerializer):
 
-    class Meta:
-        model = FloorPlan
-        fields = get_fields(FloorPlan, exclude=DEFAULT_FIELDS)+ ['id']
+#     class Meta:
+#         model = FloorPlan
+#         fields = get_fields(FloorPlan, exclude=DEFAULT_FIELDS)+ ['id']
 
 
 class DocumentSerializer(DynamicDepthSerializer):

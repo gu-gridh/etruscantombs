@@ -49,6 +49,18 @@ class EpochAdmin(admin.ModelAdmin):
     search_fields = ['text']
 
 
+@admin.register(TypeOfTomb)
+class TypeOfTombAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
+@admin.register(TypeOfImage)
+class TypeOfImageAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
 class PlaceFilter(AutocompleteFilter):
     title = _('Place') # display title
     field_name = 'place' # name of the foreign key field
@@ -59,8 +71,8 @@ class ImageModel(admin.ModelAdmin):
 
     fields              = ['image_preview', *get_fields(Image, exclude=['id'])]
     readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
-    autocomplete_fields = ['place', 'author']
-    list_display        = ['thumbnail_preview', 'title', 'place']
+    autocomplete_fields = ['tomb', 'author']
+    list_display        = ['thumbnail_preview', 'title', 'tomb']
     search_fields       = ['title', 'place__name', 'type']
     list_filter         = [PlaceFilter]
     
@@ -91,10 +103,10 @@ class Object3DAdmin(admin.ModelAdmin):
     search_fields = ['title', 'place__name', 'type']
 
 
-@admin.register(FloorPlan)
-class FloorPlanAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(FloorPlan, exclude=['id'])]
-    search_fields = ['title', 'place__name', 'type']
+# @admin.register(FloorPlan)
+# class FloorPlanAdmin(admin.ModelAdmin):
+#     list_display = [*get_fields(FloorPlan, exclude=['id'])]
+#     search_fields = ['title', 'place__name', 'type']
 
 
 @admin.register(Document)

@@ -36,15 +36,52 @@ class Epoch(abstract.AbstractTagModel):
         return str(self)
     
 
+class TypeOfTomb(abstract.AbstractTagModel):
+
+    class Meta:
+        verbose_name = _("Type of tomb")
+        verbose_name_plural = _("Types of tombs")
+
+    def __str__(self) -> str:
+        return self.text
+    
+    def __repr__(self) -> str:
+        return str(self)
+    
+
+class TypeOfImage(abstract.AbstractTagModel):
+
+    class Meta:
+        verbose_name = _("Type of image")
+        verbose_name_plural = _("Types of image")
+
+    def __str__(self) -> str:
+        return self.text
+    
+    def __repr__(self) -> str:
+        return str(self)
+    
+
+class Author(abstract.AbstractBaseModel):
+    author_firstname = models.CharField(max_length=256, blank=True, null=True)
+    author_lastname = models.CharField(max_length=256, blank=True, null=True)
+
+    def __str__(self) -> str:
+        return f"{self.author_firstname} {self.author_lastname}"
+    
+
 # Place
 class Place(abstract.AbstractBaseModel):
     
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Please enter the name of the tomb"))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     parent_id = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, help_text=_("If this tombs is attached to other tombs"))
-    tags = models.ManyToManyField(Tag, null=True, blank=True)
+    type = models.ForeignKey(TypeOfTomb, on_delete=models.CASCADE, null=True, blank=True, help_text=_("Type of the tomb"))
+    tags = models.ManyToManyField(Tag, null=True, blank=True, help_text=_("Tags attached to the tomb"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the tomb"))
-    date = models.ForeignKey(Epoch, on_delete=models.CASCADE, blank=True, null=True, help_text=_("Dating of the tomb"))
+    epoch = models.ForeignKey(Epoch, on_delete=models.CASCADE, blank=True, null=True, help_text=_("Dating of the tomb"))
+    default_image = models.ForeignKey("Image", on_delete=models.CASCADE, null=True, blank=True, help_text=_("Default image showing on preview"))
+    default_3D = models.ForeignKey("Object3D", on_delete=models.CASCADE, null=True, blank=True, help_text=_("Default image showing on preview"))
 
     def __str__(self) -> str:
         return self.name
@@ -52,28 +89,16 @@ class Place(abstract.AbstractBaseModel):
     class Meta:
         verbose_name = _("Place")
 
-    # TODO add default objects for Image or Object3D
-    
+    # TODO add default objects for Image or Object3D.
 
-class Author(abstract.AbstractBaseModel):
-    # title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    author_firstname = models.CharField(max_length=256, blank=True, null=True)
-    author_lastname = models.CharField(max_length=256, blank=True, null=True)
-    # attribution = models.CharField(max_length=256, blank=True, null=True)
-    # publication_place = models.CharField(max_length=256, blank=True, null=True)
-    # publication_year = models.IntegerField(blank=True, null=True)
-    # gupea = models.CharField(max_length=128, blank=True, null=True)
-
-    def __str__(self) -> str:
-        return f"{self.author_firstname} {self.author_lastname}"
-    
 
 class Image(abstract.AbstractTIFFImageModel):
 
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
-    place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="images")
-    type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpeg, png, etc."))
+    tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="images")
+    type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be 'floor plan' or 'image'"))
+    format = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpg, png, etc"))
     image_url = models.CharField(max_length=256, blank=True, null=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
     date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
@@ -95,7 +120,7 @@ class Layer(abstract.AbstractBaseModel):
 class Object3D(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
-    place   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="object3D")
+    tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="object3D")
     type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the object can be 3D-hop or cloudpoint"))
     link_3Dhop = models.CharField(max_length=1024, blank=True, null=True)
     link_pointcloud = models.CharField(max_length=1024, blank=True, null=True)
@@ -112,27 +137,27 @@ class Object3D(abstract.AbstractBaseModel):
     # QUESTION: are 3D hop and pointcloud mutually exclusive
     # TODO: split this into 3d hop and pointcloud
     # TODO: write in parameters for each
-    # TODO: add date of creation
     # TODO: add preview image
+    # TODO: add default naming conventions to forms
 
 
-class FloorPlan(abstract.AbstractBaseModel):
-    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
-    place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="floorplans")
-    # type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpeg, png, etc."))
-    # image_url = models.CharField(max_length=256, blank=True, null=True)
-    upload = models.FileField(storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"), 
-                              default=None, help_text="Upload a file (image / pdf) showing the floor plans of the tomb")
-    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
-    date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
+# class FloorPlan(abstract.AbstractBaseModel):
+#     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
+#     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
+#     place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="floorplans")
+#     # type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpeg, png, etc."))
+#     # image_url = models.CharField(max_length=256, blank=True, null=True)
+#     upload = models.FileField(storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"), 
+#                               default=None, help_text="Upload a file (image / pdf) showing the floor plans of the tomb")
+#     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
+#     date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
 
-    def __str__(self) -> str:
-        return f"{self.title}"
+#     def __str__(self) -> str:
+#         return f"{self.title}"
     
-    class Meta:
-        verbose_name = _("Floor plan")
-        verbose_name_plural = _("Floor plans")
+#     class Meta:
+#         verbose_name = _("Floor plan")
+#         verbose_name_plural = _("Floor plans")
 
     # FIX: to change Abstract Base Model to Abstract TIFF Image Model, a default needs to be defined in the tables (non-nullifiable fields) 
 
