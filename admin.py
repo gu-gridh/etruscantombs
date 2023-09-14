@@ -59,7 +59,7 @@ class ImageModel(admin.ModelAdmin):
 
     fields              = ['image_preview', *get_fields(Image, exclude=['id'])]
     readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
-    autocomplete_fields = ['place']
+    autocomplete_fields = ['place', 'author']
     list_display        = ['thumbnail_preview', 'title', 'place']
     search_fields       = ['title', 'place__name', 'type']
     list_filter         = [PlaceFilter]

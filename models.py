@@ -3,15 +3,12 @@ from django.contrib.gis.db import models
 import diana.abstract.models as abstract
 from django.utils.translation import gettext_lazy as _
 from diana.storages import OriginalFileStorage
+from diana.abstract.models import get_original_path
 from ckeditor.fields import RichTextField
 from markdownfield.models import MarkdownField, RenderedMarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 from datetime import date
 # Create your models here.
-
-# TODO: add Plan: images of the floor plan
-# TODO: add Document: Any document related to a Place 
-# TODO: add Observation (simple text)
 
 class Tag(abstract.AbstractTagModel):
     
@@ -55,6 +52,8 @@ class Place(abstract.AbstractBaseModel):
     class Meta:
         verbose_name = _("Place")
 
+    # TODO add default objects for Image or Object3D
+    
 
 class Author(abstract.AbstractBaseModel):
     # title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
@@ -81,8 +80,6 @@ class Image(abstract.AbstractTIFFImageModel):
 
     def __str__(self) -> str:
         return f"{self.title}"
-    
-    # TODO : add date of image
     
 
 class Layer(abstract.AbstractBaseModel):
@@ -123,9 +120,12 @@ class FloorPlan(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="floorplans")
-    image_url = models.CharField(max_length=256, blank=True, null=True)
-    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the floor plan"))
-    date = models.DateField(default=date.today, help_text=_("Date in which the floor plan was created"))
+    # type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpeg, png, etc."))
+    # image_url = models.CharField(max_length=256, blank=True, null=True)
+    upload = models.FileField(storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"), 
+                              default=None, help_text="Upload a file (image / pdf) showing the floor plans of the tomb")
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
+    date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -134,12 +134,15 @@ class FloorPlan(abstract.AbstractBaseModel):
         verbose_name = _("Floor plan")
         verbose_name_plural = _("Floor plans")
 
+    # FIX: to change Abstract Base Model to Abstract TIFF Image Model, a default needs to be defined in the tables (non-nullifiable fields) 
+
 
 class Document(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="documentation")
-    document_url = models.CharField(max_length=256, blank=True, null=True)
+    upload = models.FileField(storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"), default=None)
+    # document_url = models.CharField(max_length=256, blank=True, null=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the document"))
     date = models.DateField(default=date.today, help_text=_("Date in which the document was created"))
 
@@ -156,4 +159,5 @@ class Observation(abstract.AbstractBaseModel):
     place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="observation")
     observation = RichTextField(null=True, blank=True, help_text=("Write observation here"))
     date = models.DateField(default=date.today, help_text=_("Date in which the document was created"))
-    # QUESTION does this model needs a "related image" field? E.g. to update hand written notes
+    
+    # QUESTION does this model needs a "related image" field? E.g. to update hand written notes, it could be either an Image or a Document
