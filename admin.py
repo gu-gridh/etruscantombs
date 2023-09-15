@@ -61,6 +61,12 @@ class TypeOfImageAdmin(admin.ModelAdmin):
     search_fields = ['text']
 
 
+@admin.register(TypeOfDocument)
+class TypeOfDocumentAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
 class PlaceFilter(AutocompleteFilter):
     title = _('Place') # display title
     field_name = 'place' # name of the foreign key field
@@ -111,7 +117,7 @@ class ObjectPointCloudAdmin(admin.ModelAdmin):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Document, exclude=['id'])]
+    list_display = [*get_fields(Document, exclude=['id', 'type'])]
     search_fields = ['title', 'place__name', 'type']
 
 

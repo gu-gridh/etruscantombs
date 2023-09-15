@@ -8,6 +8,7 @@ from ckeditor.fields import RichTextField
 from markdownfield.models import MarkdownField, RenderedMarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 from datetime import date
+from .validators import validate_file_extension, validate_image_extension
 # Create your models here.
 
 from django.contrib.postgres.fields import ArrayField
@@ -60,6 +61,19 @@ class TypeOfImage(abstract.AbstractTagModel):
     class Meta:
         verbose_name = _("Type of image")
         verbose_name_plural = _("Types of image")
+
+    def __str__(self) -> str:
+        return self.text
+    
+    def __repr__(self) -> str:
+        return str(self)
+    
+
+class TypeOfDocument(abstract.AbstractTagModel):
+
+    class Meta:
+        verbose_name = _("Type of document")
+        verbose_name_plural = _("Types of document")
 
     def __str__(self) -> str:
         return self.text
@@ -172,8 +186,9 @@ class Document(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="documentation")
-    upload = models.FileField(storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"), default=None)
-    # document_url = models.CharField(max_length=256, blank=True, null=True)
+    upload = models.FileField(storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"), default=None, validators=[validate_file_extension])
+    type = models.ManyToManyField(TypeOfDocument, blank=True, verbose_name=_("Type of document: Report, Thesis, etc"))
+    size = models.FloatField(help_text=_("Document size in mb"), default=None)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the document"))
     date = models.DateField(default=date.today, help_text=_("Date in which the document was created"))
 
