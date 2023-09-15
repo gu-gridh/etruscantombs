@@ -82,6 +82,19 @@ class TypeOfDocument(abstract.AbstractTagModel):
         return str(self)
     
 
+class TypeOfObservation(abstract.AbstractTagModel):
+
+    class Meta:
+        verbose_name = _("Type of observation")
+        verbose_name_plural = _("Types of observation")
+
+    def __str__(self) -> str:
+        return self.text
+    
+    def __repr__(self) -> str:
+        return str(self)
+    
+
 class Author(abstract.AbstractBaseModel):
     firstname = models.CharField(max_length=256, blank=True, null=True)
     lastname = models.CharField(max_length=256, blank=True, null=True)
@@ -204,6 +217,7 @@ class Observation(abstract.AbstractBaseModel):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="observation")
     observation = RichTextField(null=True, blank=True, help_text=("Write observation here"))
+    type = models.ManyToManyField(TypeOfObservation, blank=True, verbose_name=_("Type of the observation: Survey, Damage report, etc"))
     date = models.DateField(default=date.today, help_text=_("Date in which the document was created"))
     
     # QUESTION does this model needs a "related image" field? E.g. to update hand written notes, it could be either an Image or a Document

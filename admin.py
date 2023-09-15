@@ -67,6 +67,12 @@ class TypeOfDocumentAdmin(admin.ModelAdmin):
     search_fields = ['text']
 
 
+@admin.register(TypeOfObservation)
+class TypeOfObservationAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
 class PlaceFilter(AutocompleteFilter):
     title = _('Place') # display title
     field_name = 'place' # name of the foreign key field
@@ -123,5 +129,5 @@ class DocumentAdmin(admin.ModelAdmin):
 
 @admin.register(Observation)
 class ObservationAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Observation, exclude=['id'])]
+    list_display = [*get_fields(Observation, exclude=['id', 'type'])]
     search_fields = ['title', 'place__name', 'type']
