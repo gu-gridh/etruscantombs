@@ -39,8 +39,29 @@ class LayerViewSet(DynamicDepthViewSet):
     filterset_fields = get_fields(models.Layer, exclude=DEFAULT_FIELDS)
 
 
-class Object3DViewSet(DynamicDepthViewSet):
+class Object3DHopViewSet(DynamicDepthViewSet):
     
-    queryset = models.Object3D.objects.all()
-    serializer_class = serializers.Object3DSerializer
-    filterset_fields = get_fields(models.Object3D, exclude=DEFAULT_FIELDS)
+    queryset = models.Object3DHop.objects.all()
+    serializer_class = serializers.Object3DHopSerializer
+    filterset_fields = get_fields(models.Object3DHop, exclude=DEFAULT_FIELDS)
+
+
+class ObjectPointcloudViewSet(DynamicDepthViewSet):
+    
+    queryset = models.ObjectPointCloud.objects.all()
+    serializer_class = serializers.ObjectPointCloudSerializer
+    filterset_fields = get_fields(models.ObjectPointCloud, exclude=DEFAULT_FIELDS)
+
+
+class DocumentViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Document.objects.all()
+    serializer_class = serializers.DocumentSerializer
+    filterset_fields = get_fields(models.Document, exclude=DEFAULT_FIELDS)
+
+
+class ObservationViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Observation.objects.all()
+    serializer_class = serializers.ObservationSerializer
+    filterset_fields = get_fields(models.Observation, exclude=DEFAULT_FIELDS)

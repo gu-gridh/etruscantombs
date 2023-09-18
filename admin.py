@@ -43,17 +43,48 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ['text']
 
 
+@admin.register(Epoch)
+class EpochAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
+@admin.register(TypeOfTomb)
+class TypeOfTombAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
+@admin.register(TypeOfImage)
+class TypeOfImageAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
+@admin.register(TypeOfDocument)
+class TypeOfDocumentAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
+@admin.register(TypeOfObservation)
+class TypeOfObservationAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
 class PlaceFilter(AutocompleteFilter):
     title = _('Place') # display title
     field_name = 'place' # name of the foreign key field
+
 
 @admin.register(Image)
 class ImageModel(admin.ModelAdmin):
 
     fields              = ['image_preview', *get_fields(Image, exclude=['id'])]
     readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
-    autocomplete_fields = ['place']
-    list_display        = ['thumbnail_preview', 'title', 'place']
+    autocomplete_fields = ['tomb', 'author']
+    list_display        = ['thumbnail_preview', 'title', 'tomb']
     search_fields       = ['title', 'place__name', 'type']
     list_filter         = [PlaceFilter]
     
@@ -75,10 +106,28 @@ class LayerAdmin(admin.ModelAdmin):
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
     list_display = [*get_fields(Author, exclude=['id'])]
-    search_fields = ['author_firstname', 'author_lastname']
+    search_fields = ['firstname', 'lastname']
 
 
-@admin.register(Object3D)
-class Object3DAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Object3D, exclude=['id'])]
+@admin.register(Object3DHop)
+class Object3DHopAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Object3DHop, exclude=['id', 'author'])]
+    search_fields = ['title', 'place__name', 'type']
+
+
+@admin.register(ObjectPointCloud)
+class ObjectPointCloudAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
+    search_fields = ['title', 'place__name', 'type']
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Document, exclude=['id', 'type'])]
+    search_fields = ['title', 'place__name', 'type']
+
+
+@admin.register(Observation)
+class ObservationAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Observation, exclude=['id', 'type'])]
     search_fields = ['title', 'place__name', 'type']
