@@ -159,9 +159,9 @@ class Object3DHop(abstract.AbstractBaseModel):
     trackball_start = ArrayField(models.FloatField(), size=6, default=list)
     start_angle = ArrayField(models.FloatField(), size=2, default=list, verbose_name=_("Start angle (phi, theta)"))
     start_distance = models.FloatField(null=True, blank=True, verbose_name=_("initial mesh distance"))
-    start_pan = ArrayField(models.FloatField(), size=3, default=get_list_zeros)
-    min_max_phi = ArrayField(models.FloatField(), size=3, default=get_min_max_default, verbose_name=_("maximal vertical camera angles"))
-    min_max_theta = ArrayField(models.FloatField(), size=3, default=get_min_max_default, verbose_name=_("maximal horizontal camera angles"))
+    start_pan = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
+    min_max_phi = ArrayField(models.FloatField(), size=2, default=get_min_max_default, verbose_name=_("maximal vertical camera angles"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
+    min_max_theta = ArrayField(models.FloatField(), size=2, default=get_min_max_default, verbose_name=_("maximal horizontal camera angles"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
 
     preview_image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -184,8 +184,8 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
     date = models.DateField(default=date.today, help_text=_("Date in which the 3D object was created"))
 
-    camera_position = ArrayField(models.FloatField(), size=3, default=list)
-    look_at = ArrayField(models.FloatField(), size=3, default=list)
+    camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
+    look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
 
     def __str__(self) -> str:
         return f"{self.title}"
