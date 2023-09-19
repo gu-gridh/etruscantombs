@@ -157,7 +157,7 @@ class Image(abstract.AbstractTIFFImageModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="images")
-    type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be 'floor plan' or 'image'"))
+    type_of_image = models.ManyToManyField(TypeOfImage, blank=True)
     # format = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpg, png, etc"))
     # image_url = models.CharField(max_length=256, blank=True, null=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
