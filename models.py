@@ -134,7 +134,6 @@ class Place(abstract.AbstractBaseModel):
     
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Please enter the name of the tomb"))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
-    # parent_id = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, help_text=_("If this tombs is attached to other tombs"))
     necropolis = models.ForeignKey(Necropolis, null=True, blank=True, on_delete=models.CASCADE)
     type = models.ForeignKey(TypeOfTomb, on_delete=models.CASCADE, null=True, blank=True, help_text=_("Type of the tomb"))
     number_of_chambers = models.IntegerField(null=True, blank=True, verbose_name=_("number of chambers"))
@@ -158,8 +157,6 @@ class Image(abstract.AbstractTIFFImageModel):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="images")
     type_of_image = models.ManyToManyField(TypeOfImage, blank=True)
-    # format = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpg, png, etc"))
-    # image_url = models.CharField(max_length=256, blank=True, null=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
     date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
 

@@ -29,6 +29,7 @@ class PlaceAdmin(LeafletGeoAdmin, admin.ModelAdmin):
     display_raw = True
     list_display = ['name', 'geometry'] # 'parent_id'
     search_fields = ['name']
+    filter_horizontal = ['tags']
 
     # overrides base setting of Leaflet Geo Widget
     settings_overrides = {
@@ -127,6 +128,7 @@ class ObjectPointCloudAdmin(admin.ModelAdmin):
 class DocumentAdmin(admin.ModelAdmin):
     list_display = ['title', 'author', 'size']# [*get_fields(Document, exclude=['id', 'type', 'place'])]
     search_fields = ['title', 'place__name', 'type']
+    filter_horizontal = ['place']
 
 
 @admin.register(Observation)
