@@ -8,7 +8,7 @@ from admin_auto_filters.filters import AutocompleteFilter
 from rangefilter.filters import NumericRangeFilter
 from django.contrib.admin import EmptyFieldListFilter
 
-from leaflet.admin import LeafletGeoAdminMixin
+from leaflet.admin import LeafletGeoAdminMixin, LeafletGeoAdmin
 from leaflet_admin_list.admin import LeafletAdminListMixin
 
 from django.conf import settings
@@ -21,19 +21,21 @@ from io import StringIO
 DEFAULT_LONGITUDE =  11.9900
 DEFAULT_LATITUDE  = 42.2200
 DEFAULT_ZOOM = 10
+MAX_ZOOM = 16
+MIN_ZOOM = 5
 
 @admin.register(Place)
-class PlaceAdmin(admin.GISModelAdmin):
+class PlaceAdmin(LeafletGeoAdmin, admin.ModelAdmin):
     display_raw = True
     list_display = ['name', 'geometry'] # 'parent_id'
     search_fields = ['name']
 
-    gis_widget_kwargs = {
-        'attrs': {
-            'default_lon' : DEFAULT_LONGITUDE,
-            'default_lat' : DEFAULT_LATITUDE,
-            'default_zoom' : DEFAULT_ZOOM,
-        },
+    # overrides base setting of Leaflet Geo Widget
+    settings_overrides = {
+       'DEFAULT_CENTER': (DEFAULT_LATITUDE, DEFAULT_LONGITUDE),
+       'DEFAULT_ZOOM': DEFAULT_ZOOM,
+       'MAX_ZOOM': MAX_ZOOM,
+       'MIN_ZOOM': MIN_ZOOM
     }
 
 
