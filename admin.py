@@ -18,12 +18,12 @@ import base64
 from io import StringIO
 
 
-DEFAULT_LONGITUDE =  11.99
-DEFAULT_LATITUDE  = 42.22
+DEFAULT_LONGITUDE =  11.9900
+DEFAULT_LATITUDE  = 42.2200
 DEFAULT_ZOOM = 10
 
 @admin.register(Place)
-class PlaceAdmin(LeafletGeoAdminMixin, admin.ModelAdmin,):
+class PlaceAdmin(admin.GISModelAdmin):
     display_raw = True
     list_display = ['name', 'geometry'] # 'parent_id'
     search_fields = ['name']
@@ -105,31 +105,31 @@ class LayerAdmin(admin.ModelAdmin):
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Author, exclude=['id'])]
+    list_display = ['lastname', 'firstname']# [*get_fields(Author, exclude=['id'])]
     search_fields = ['firstname', 'lastname']
 
 
 @admin.register(Object3DHop)
 class Object3DHopAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Object3DHop, exclude=['id', 'author'])]
+    list_display = ['title', 'tomb', 'scaled', 'preview_image'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
 
 
 @admin.register(ObjectPointCloud)
 class ObjectPointCloudAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
+    list_display = ['title', 'tomb', 'scaled', 'preview_image'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
 
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Document, exclude=['id', 'type', 'place'])]
+    list_display = ['title', 'author', 'size']# [*get_fields(Document, exclude=['id', 'type', 'place'])]
     search_fields = ['title', 'place__name', 'type']
 
 
 @admin.register(Observation)
 class ObservationAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Observation, exclude=['id', 'type'])]
+    list_display = ['title', 'place', 'author']#[*get_fields(Observation, exclude=['id', 'type'])]
     search_fields = ['title', 'place__name', 'type']
 
 

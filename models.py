@@ -227,6 +227,8 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
     camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
 
+    preview_image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, blank=True)
+
     def __str__(self) -> str:
         return f"{self.title}"
     
