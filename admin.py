@@ -131,3 +131,9 @@ class DocumentAdmin(admin.ModelAdmin):
 class ObservationAdmin(admin.ModelAdmin):
     list_display = [*get_fields(Observation, exclude=['id', 'type'])]
     search_fields = ['title', 'place__name', 'type']
+
+
+@admin.register(Necropolis)
+class NecropolisAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Necropolis, exclude=['id'])]
+    search_fields = ['title', 'place__name', 'type']

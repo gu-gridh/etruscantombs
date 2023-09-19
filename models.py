@@ -95,6 +95,19 @@ class TypeOfObservation(abstract.AbstractTagModel):
         return str(self)
     
 
+class Necropolis(abstract.AbstractTagModel):
+
+    class Meta:
+        verbose_name = _("Necropolis")
+        verbose_name_plural = _("Necropolis")
+
+    def __str__(self) -> str:
+        return self.text
+    
+    def __repr__(self) -> str:
+        return str(self)
+    
+
 class Author(abstract.AbstractBaseModel):
     firstname = models.CharField(max_length=256, blank=True, null=True)
     lastname = models.CharField(max_length=256, blank=True, null=True)
