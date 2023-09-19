@@ -25,7 +25,7 @@ DEFAULT_ZOOM = 10
 @admin.register(Place)
 class PlaceAdmin(LeafletGeoAdminMixin, admin.ModelAdmin,):
     display_raw = True
-    list_display = ['name', 'geometry', 'parent_id']
+    list_display = ['name', 'geometry'] # 'parent_id'
     search_fields = ['name']
 
     gis_widget_kwargs = {
@@ -123,7 +123,7 @@ class ObjectPointCloudAdmin(admin.ModelAdmin):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Document, exclude=['id', 'type'])]
+    list_display = [*get_fields(Document, exclude=['id', 'type', 'place'])]
     search_fields = ['title', 'place__name', 'type']
 
 
@@ -136,4 +136,10 @@ class ObservationAdmin(admin.ModelAdmin):
 @admin.register(Necropolis)
 class NecropolisAdmin(admin.ModelAdmin):
     list_display = [*get_fields(Necropolis, exclude=['id'])]
+    search_fields = ['title', 'place__name', 'type']
+
+
+@admin.register(Technique3D)
+class Technique3DAdmin(admin.ModelAdmin):
+    list_display = [*get_fields(Technique3D, exclude=['id'])]
     search_fields = ['title', 'place__name', 'type']

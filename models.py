@@ -108,6 +108,19 @@ class Necropolis(abstract.AbstractTagModel):
         return str(self)
     
 
+class Technique3D(abstract.AbstractTagModel):
+
+    class Meta:
+        verbose_name = _("3D technique")
+        verbose_name_plural = _("3D techniques")
+
+    def __str__(self) -> str:
+        return self.text
+    
+    def __repr__(self) -> str:
+        return str(self)
+    
+
 class Author(abstract.AbstractBaseModel):
     firstname = models.CharField(max_length=256, blank=True, null=True)
     lastname = models.CharField(max_length=256, blank=True, null=True)
@@ -121,7 +134,8 @@ class Place(abstract.AbstractBaseModel):
     
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Please enter the name of the tomb"))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
-    parent_id = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, help_text=_("If this tombs is attached to other tombs"))
+    # parent_id = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, help_text=_("If this tombs is attached to other tombs"))
+    necropolis = models.ForeignKey(Necropolis, null=True, blank=True, on_delete=models.CASCADE)
     type = models.ForeignKey(TypeOfTomb, on_delete=models.CASCADE, null=True, blank=True, help_text=_("Type of the tomb"))
     number_of_chambers = models.IntegerField(null=True, blank=True, verbose_name=_("number of chambers"))
     tags = models.ManyToManyField(Tag, blank=True, help_text=_("Tags attached to the tomb"))
@@ -144,8 +158,8 @@ class Image(abstract.AbstractTIFFImageModel):
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="images")
     type = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be 'floor plan' or 'image'"))
-    format = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpg, png, etc"))
-    image_url = models.CharField(max_length=256, blank=True, null=True)
+    # format = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpg, png, etc"))
+    # image_url = models.CharField(max_length=256, blank=True, null=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
     date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
 
@@ -164,11 +178,17 @@ class Layer(abstract.AbstractBaseModel):
 
 class Object3DHop(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
+    subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"))
     author = models.ManyToManyField(Author, blank=True)
     tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="object_3Dhop")
-    url = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("3D-Hop URL"))
+    url_optimized = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL of optimized model"))
+    url_full_resolution = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL of full resolution model"))
+    triangles_optimized = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Triangles (optimized)"), help_text=_("number of triangles of the optimized mesh, e.g.: 250 millions"))
+    triangles_full_resolution = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Triangles (full resolution)"), help_text=_("number of triangles of the full resolution mesh, e.g.: 1.3 billions"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
     date = models.DateField(default=date.today, help_text=_("Date in which the 3D object was created"))
+    technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.CASCADE, help_text=_("Technique used to generate the 3D model"))
+    scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
     
     trackball_start = ArrayField(models.FloatField(), size=6, default=list)
     start_angle = ArrayField(models.FloatField(), size=2, default=list, verbose_name=_("Start angle (phi, theta)"))
@@ -192,11 +212,17 @@ class Object3DHop(abstract.AbstractBaseModel):
 
 class ObjectPointCloud(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
+    subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"))
     author = models.ManyToManyField(Author, blank=True)
     tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="object_pointcloud")
-    url = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Pointcloud URL"))
+    url_optimized = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL of optimized model"))
+    url_full_resolution = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL of full resolution model"))
+    points_optimized = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Points (optimized)"), help_text=_("number of points of the optimized models, e.g.: 250 millions"))
+    points_full_resolution = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Points (full resolution)"),  help_text=_("number of points of the full resolution model, e.g.: 1.3 billions"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
     date = models.DateField(default=date.today, help_text=_("Date in which the 3D object was created"))
+    technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.CASCADE, help_text=_("Technique used to generate the 3D model"))
+    scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
 
     camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
@@ -212,7 +238,7 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
 class Document(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
-    place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="documentation")
+    place = models.ManyToManyField(Place, blank=True, related_name="documentation")
     upload = models.FileField(storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"), default=None, validators=[validate_file_extension])
     type = models.ManyToManyField(TypeOfDocument, blank=True, verbose_name=_("Type of document: Report, Thesis, etc"))
     size = models.FloatField(help_text=_("Document size in mb"), default=None)
