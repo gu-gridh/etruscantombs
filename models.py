@@ -136,7 +136,7 @@ class Place(abstract.AbstractBaseModel):
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     necropolis = models.ForeignKey(Necropolis, null=True, blank=True, on_delete=models.CASCADE)
     type = models.ForeignKey(TypeOfTomb, on_delete=models.CASCADE, null=True, blank=True, help_text=_("Type of the tomb"))
-    number_of_chambers = models.IntegerField(null=True, blank=True, verbose_name=_("number of chambers"))
+    number_of_chambers = models.FloatField(null=True, blank=True, verbose_name=_("number of chambers"))
     tags = models.ManyToManyField(Tag, blank=True, help_text=_("Tags attached to the tomb"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the tomb"))
     epoch = models.ForeignKey(Epoch, on_delete=models.CASCADE, blank=True, null=True, help_text=_("Dating of the tomb"))
