@@ -133,6 +133,7 @@ class Author(abstract.AbstractBaseModel):
 class Place(abstract.AbstractBaseModel):
     
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Please enter the name of the tomb"))
+    subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"), default = None)    
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     necropolis = models.ForeignKey(Necropolis, null=True, blank=True, on_delete=models.CASCADE)
     type = models.ForeignKey(TypeOfTomb, on_delete=models.CASCADE, null=True, blank=True, help_text=_("Type of the tomb"))
