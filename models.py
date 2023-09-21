@@ -239,9 +239,9 @@ class Document(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
     place = models.ManyToManyField(Place, blank=True, related_name="documentation")
-    upload = models.FileField(storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("general.file"), default=None, validators=[validate_file_extension])
+    upload = models.FileField(null=True, blank=True, storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("file"), validators=[validate_file_extension])
     type = models.ManyToManyField(TypeOfDocument, blank=True, verbose_name=_("Type of document: Report, Thesis, etc"))
-    size = models.FloatField(help_text=_("Document size in mb"), default=None)
+    size = models.FloatField(null=True, blank=True, help_text=_("Document size in mb"), default=None)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the document"))
     date = models.DateField(default=date.today, help_text=_("Date in which the document was created"))
 

@@ -88,7 +88,7 @@ class ImageModel(admin.ModelAdmin):
     readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
     autocomplete_fields = ['tomb', 'author']
     list_display        = ['thumbnail_preview', 'title', 'tomb']
-    search_fields       = ['title', 'place__name', 'type_of_image']
+    search_fields       = ['title', 'tomb__name', 'type_of_image__text']
     list_filter         = [PlaceFilter]
     
     list_per_page = 10

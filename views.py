@@ -57,8 +57,8 @@ class DocumentViewSet(DynamicDepthViewSet):
     
     queryset = models.Document.objects.all()
     serializer_class = serializers.DocumentSerializer
-    filterset_fields = get_fields(models.Document, exclude=DEFAULT_FIELDS)
-
+    filterset_fields = get_fields(models.Document, exclude=DEFAULT_FIELDS+['upload'])
+    
 
 class ObservationViewSet(DynamicDepthViewSet):
     
