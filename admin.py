@@ -139,8 +139,8 @@ class ObservationAdmin(admin.ModelAdmin):
 
 @admin.register(Necropolis)
 class NecropolisAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Necropolis, exclude=['id'])]
-    search_fields = ['title', 'place__name', 'type']
+    list_display = ['text']
+    search_fields = ['text']
 
 
 @admin.register(Technique3D)
