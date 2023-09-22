@@ -27,7 +27,7 @@ MIN_ZOOM = 5
 @admin.register(Place)
 class PlaceAdmin(LeafletGeoAdmin, admin.ModelAdmin):
     display_raw = True
-    list_display = ['name', 'geometry'] # 'parent_id'
+    list_display = ['name', 'subtitle', 'type', 'geometry', 'necropolis'] # 'parent_id'
     search_fields = ['name']
     filter_horizontal = ['tags']
 
