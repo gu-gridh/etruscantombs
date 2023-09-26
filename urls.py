@@ -11,14 +11,16 @@ documentation = utils.build_app_api_documentation("etruscantombs", endpoint)
 router.register(rf'{endpoint}/geojson/place', views.PlaceGeoViewSet, basename='place on geojson')
 router.register(rf'{endpoint}/image', views.IIIFImageViewSet, basename='image')
 router.register(rf'{endpoint}/document', views.DocumentViewSet, basename='document')
+router.register(rf'{endpoint}/object3dhop', views.Object3DHopViewSet, basename='object 3D hop')
+router.register(rf'{endpoint}/objectpointcloud', views.ObjectPointcloudViewSet, basename='object point cloud')
 
 urlpatterns = [
     path('', include(router.urls)),
 
     # Automatically generated views
     *utils.get_model_urls('etruscantombs', endpoint, 
-        exclude=['image', 'place', 'document']),
+        exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud']),
 
-    *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'place', 'document']),
+    *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud']),
     *documentation
 ]
