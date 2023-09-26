@@ -52,7 +52,7 @@ class ObjectPointcloudViewSet(DynamicDepthViewSet):
     
     queryset = models.ObjectPointCloud.objects.all()
     serializer_class = serializers.ObjectPointCloudSerializer
-    filterset_fields = get_fields(models.ObjectPointCloud, exclude=DEFAULT_FIELDS+['preview_image'])
+    filterset_fields = get_fields(models.ObjectPointCloud, exclude=DEFAULT_FIELDS+['preview_image', 'camera_position', 'look_at'])
 
 
 class DocumentViewSet(DynamicDepthViewSet):
