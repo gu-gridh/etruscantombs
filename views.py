@@ -43,14 +43,16 @@ class Object3DHopViewSet(DynamicDepthViewSet):
     
     queryset = models.Object3DHop.objects.all()
     serializer_class = serializers.Object3DHopSerializer
-    filterset_fields = get_fields(models.Object3DHop, exclude=DEFAULT_FIELDS)
+    filterset_fields = get_fields(models.Object3DHop, exclude=DEFAULT_FIELDS+['preview_image', 'trackball_start', 
+                                                                              'start_angle', 'start_pan', 
+                                                                              'min_max_phi', 'min_max_theta'])
 
 
 class ObjectPointcloudViewSet(DynamicDepthViewSet):
     
     queryset = models.ObjectPointCloud.objects.all()
     serializer_class = serializers.ObjectPointCloudSerializer
-    filterset_fields = get_fields(models.ObjectPointCloud, exclude=DEFAULT_FIELDS)
+    filterset_fields = get_fields(models.ObjectPointCloud, exclude=DEFAULT_FIELDS+['preview_image'])
 
 
 class DocumentViewSet(DynamicDepthViewSet):
