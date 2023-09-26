@@ -1,5 +1,5 @@
 from diana.abstract.serializers import DynamicDepthSerializer, GenericSerializer
-from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from rest_framework_gis.serializers import GeoFeatureModelSerializer, ListSerializer
 from . import models
 from diana.utils import get_fields, DEFAULT_FIELDS
 from .models import *
@@ -12,20 +12,23 @@ class PlaceSerializer(DynamicDepthSerializer):
         fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id']
 
 
-class PlaceGeoSerializer(GeoFeatureModelSerializer):
-
-    class Meta:
-        model = Place
-        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id']
-        geo_field = 'geometry'
-        depth = 1
-
-
 class TIFFImageSerializer(DynamicDepthSerializer):
 
     class Meta:
         model = Image
         fields = get_fields(Image, exclude=DEFAULT_FIELDS)+ ['id']
+        
+
+class PlaceGeoSerializer(GeoFeatureModelSerializer):
+
+    images = TIFFImageSerializer(many=True)
+    
+    class Meta:
+        model = Place
+        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id', 'images']
+        geo_field = 'geometry'
+        depth = 1
+
 
 
 class LayerSerializer(DynamicDepthSerializer):
