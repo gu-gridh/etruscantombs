@@ -7,7 +7,7 @@ from diana.abstract.models import get_fields, DEFAULT_FIELDS
 
 class PlaceGeoViewSet(GeoViewSet):
 
-    queryset = models.Place.objects.all()
+    queryset = models.Place.objects.all().order_by('id')
     serializer_class = serializers.PlaceGeoSerializer
     filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
     search_fields = ['placename']
@@ -27,7 +27,7 @@ class IIIFImageViewSet(DynamicDepthViewSet):
     Returns a count of the existing images after the application of any filter.
     """
     
-    queryset = models.Image.objects.all()
+    queryset = models.Image.objects.all().order_by('id')
     serializer_class = serializers.TIFFImageSerializer
     filterset_fields = get_fields(models.Image, exclude=DEFAULT_FIELDS + ['iiif_file', 'file'])
 
