@@ -51,7 +51,7 @@ class Object3DHopSerializer(DynamicDepthSerializer):
 class ObjectPointCloudSerializer(DynamicDepthSerializer):
 
     class Meta:
-        model = Object3DHop
+        model = ObjectPointCloud
         fields = get_fields(ObjectPointCloud, exclude=DEFAULT_FIELDS)+ ['id']
 
 
