@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from .models import *
+from .forms import *
 from django.utils.html import format_html
 from django.contrib.gis import admin
 from django.utils.translation import gettext_lazy as _
@@ -28,8 +29,9 @@ MIN_ZOOM = 5
 class PlaceAdmin(LeafletGeoAdmin, admin.ModelAdmin):
     display_raw = True
     list_display = ['name', 'subtitle', 'type', 'geometry', 'necropolis'] # 'parent_id'
-    search_fields = ['name']
+    search_fields = ['name', 'default_image__name']
     filter_horizontal = ['tags']
+    form = PlaceForm
 
     # overrides base setting of Leaflet Geo Widget
     settings_overrides = {
