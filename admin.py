@@ -40,6 +40,8 @@ class PlaceAdmin(LeafletGeoAdmin, admin.ModelAdmin):
        'MAX_ZOOM': MAX_ZOOM,
        'MIN_ZOOM': MIN_ZOOM
     }
+    
+    change_form_template = 'apps/etruscantombs/place_change_form.html'
 
 
 @admin.register(Tag)
@@ -100,6 +102,8 @@ class ImageModel(admin.ModelAdmin):
 
     def thumbnail_preview(self, obj):
         return format_html(f'<img src="{settings.IIIF_URL}{obj.iiif_file}/full/full/0/default.jpg" height="100" />')
+    
+    change_form_template = 'apps/etruscantombs/image_change_form.html'
 
 
 @admin.register(Layer)

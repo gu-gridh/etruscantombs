@@ -186,6 +186,29 @@ class Image(abstract.AbstractTIFFImageModel):
     def __str__(self) -> str:
         return f"{self.title}"
     
+    
+    def list_all_pk(self):
+        all_pk = []
+        for obj in Image.objects.all().order_by('pk'):
+            all_pk.append(obj.pk)
+        return all_pk
+        
+    def next(self):
+        all_pk = self.list_all_pk()
+        current_index = all_pk.index(self.pk)
+        try: 
+            return Image.objects.get(pk=all_pk[current_index+1])
+        except: 
+            return None
+        
+    def previous(self):
+        all_pk = self.list_all_pk()
+        current_index = all_pk.index(self.pk)
+        try:
+            return Image.objects.get(pk=all_pk[current_index-1])
+        except:
+            return None
+    
 
 class Layer(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))

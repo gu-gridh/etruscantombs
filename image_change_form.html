@@ -1,0 +1,12 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block object-tools %}
+<ul class="object-tools">
+  {% if change %}{% if not is_popup %}
+    {% if original.previous %}<li><a href="{% url 'admin:etruscantombs_image_change' original.previous.id %}" class="historylink">« {{original.previous}}</a></li>{% endif %}
+    {% if original.next %}<li><a href="{% url 'admin:etruscantombs_image_change' original.next.id %}" class="historylink">{{original.next}} »</a></li>{% endif %}
+  {% endif %}{% endif %}
+  
+</ul>
+{% endblock %}

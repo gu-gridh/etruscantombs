@@ -4,14 +4,9 @@
 {% block object-tools %}
 <ul class="object-tools">
   {% if change %}{% if not is_popup %}
-    <li><a href="history/" class="historylink">{% translate "History" %}</a></li>
-    {% if has_absolute_url %}
-        <li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="viewsitelink">
-            {% trans "View on site" %}</a>
-        </li>
-    {% endif%}
     {% if original.previous %}<li><a href="{% url 'admin:etruscantombs_place_change' original.previous.id %}" class="historylink">« {{original.previous}}</a></li>{% endif %}
     {% if original.next %}<li><a href="{% url 'admin:etruscantombs_place_change' original.next.id %}" class="historylink">{{original.next}} »</a></li>{% endif %}
   {% endif %}{% endif %}
+  
 </ul>
 {% endblock %}
