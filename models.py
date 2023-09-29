@@ -235,7 +235,7 @@ class Object3DHop(abstract.AbstractBaseModel):
     scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
     
     trackball_start = ArrayField(models.FloatField(), size=6, default=list)
-    start_angle = ArrayField(models.FloatField(), size=2, default=list, verbose_name=_("Start angle (phi, theta)"))
+    start_angle = ArrayField(models.FloatField(), size=2, default=list, verbose_name=_("Start angle (phi, theta)"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
     start_distance = models.FloatField(null=True, blank=True, verbose_name=_("initial mesh distance"))
     start_pan = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     min_max_phi = ArrayField(models.FloatField(), size=2, default=get_min_max_default, verbose_name=_("maximal vertical camera angles"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
