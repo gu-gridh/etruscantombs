@@ -150,6 +150,28 @@ class Place(abstract.AbstractBaseModel):
 
     class Meta:
         verbose_name = _("Place")
+        
+    def list_all_pk(self):
+        all_pk = []
+        for obj in Place.objects.all().order_by('pk'):
+            all_pk.append(obj.pk)
+        return all_pk
+        
+    def next(self):
+        all_pk = self.list_all_pk()
+        current_index = all_pk.index(self.pk)
+        try: 
+            return Place.objects.get(pk=all_pk[current_index+1])
+        except: 
+            return None
+        
+    def previous(self):
+        all_pk = self.list_all_pk()
+        current_index = all_pk.index(self.pk)
+        try:
+            return Place.objects.get(pk=all_pk[current_index-1])
+        except:
+            return None
 
 
 class Image(abstract.AbstractTIFFImageModel):
