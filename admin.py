@@ -146,9 +146,18 @@ class ObservationAdmin(admin.ModelAdmin):
 
 
 @admin.register(Necropolis)
-class NecropolisAdmin(admin.ModelAdmin):
-    list_display = ['text']
+class NecropolisAdmin(LeafletGeoAdmin, admin.ModelAdmin):
+    display_raw = True
+    list_display = ['text', 'geometry']
     search_fields = ['text']
+    
+    # overrides base setting of Leaflet Geo Widget
+    settings_overrides = {
+       'DEFAULT_CENTER': (DEFAULT_LATITUDE, DEFAULT_LONGITUDE),
+       'DEFAULT_ZOOM': DEFAULT_ZOOM,
+       'MAX_ZOOM': MAX_ZOOM,
+       'MIN_ZOOM': MIN_ZOOM
+    }
 
 
 @admin.register(Technique3D)

@@ -96,6 +96,8 @@ class TypeOfObservation(abstract.AbstractTagModel):
     
 
 class Necropolis(abstract.AbstractTagModel):
+    
+    geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True, default=None)
 
     class Meta:
         verbose_name = _("Necropolis")
