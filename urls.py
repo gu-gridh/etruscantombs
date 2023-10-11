@@ -13,14 +13,15 @@ router.register(rf'{endpoint}/image', views.IIIFImageViewSet, basename='image')
 router.register(rf'{endpoint}/document', views.DocumentViewSet, basename='document')
 router.register(rf'{endpoint}/object3dhop', views.Object3DHopViewSet, basename='object 3D hop')
 router.register(rf'{endpoint}/objectpointcloud', views.ObjectPointcloudViewSet, basename='object point cloud')
+router.register(rf'{endpoint}/necropolis', views.NecropolisViewSet, basename='necropolis')
 
 urlpatterns = [
     path('', include(router.urls)),
 
     # Automatically generated views
     *utils.get_model_urls('etruscantombs', endpoint, 
-        exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud']),
+        exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis']),
 
-    *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud']),
+    *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis']),
     *documentation
 ]

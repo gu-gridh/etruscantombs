@@ -86,3 +86,10 @@ class ObservationSerializer(DynamicDepthSerializer):
     class Meta:
         model = Observation
         fields = get_fields(Observation, exclude=DEFAULT_FIELDS)+ ['id']
+        
+        
+class NecropolisSerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = Necropolis
+        fields = get_fields(Necropolis, exclude=DEFAULT_FIELDS)+ ['id']
