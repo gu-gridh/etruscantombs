@@ -3,16 +3,26 @@ from . import models, serializers
 from django.db.models import Prefetch, Q
 from diana.abstract.views import DynamicDepthViewSet, GeoViewSet
 from diana.abstract.models import get_fields, DEFAULT_FIELDS
+from django.db.models import Q
 
 
 class PlaceGeoViewSet(GeoViewSet):
 
     queryset = models.Place.objects.all().order_by('id')
     serializer_class = serializers.PlaceGeoSerializer
-    filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
-    search_fields = ['placename']
+    filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry', 'threedhop_count', 'pointcloud_count'])
+    search_fields = ['placename'] # this does nothing!!
     bbox_filter_field = 'geometry'
     bbox_filter_include_overlapping = True
+    
+    def get_queryset(self):
+        queryset = models.Place.objects.all().order_by('id')
+        with_3D = self.request.query_params.get('with_3D')
+        if with_3D:
+            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False))# (object_3Dhop__isnull=False or object_pointcloud__isnull=False)
+        
+        return queryset
+        
 
 
 class IIIFImageViewSet(DynamicDepthViewSet):
