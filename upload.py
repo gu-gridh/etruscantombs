@@ -1,12 +1,10 @@
 import os
-import sys
-import PIL
-import shutil
+from django.core.files import File
 from .models import *
 
-local_folder = sys.args[1]
-if len(sys.args) == 1:
-    local_folder = "../../../Utils_EtruscanTombs/SG_tombs_data_dump/Test_data_dump/"
+# local_folder = sys.args[1]
+# if len(sys.args) == 1:
+#     local_folder = "~/Documents/06_Development/03_GRIDH/Utils_EtruscanTombs/SG_tombs_data_dump/Test_data_dump/"
 
 def get_or_none(classmodel: models.Model, **kwargs):
     try:
@@ -32,23 +30,28 @@ def upload_image(filename):
     
     tomb = get_or_none(Place, **{"name": tomb_name})
     author = get_or_none(Author, **{"firstname": author_firstname, "lastname": author_lastname})
-    type_of_image = get_or_none(TypeOfImage, **{"text": image_type})
+    image_type = get_or_none(TypeOfImage, **{"text": image_type})
     
     image = Image(
+        title = "Documentation",
         author = author,
         tomb = tomb,
-        type_of_image = type_of_image,
+        file = filename,
         date = creation_date
     )
     
     image.save()
+    image.type_of_image.add(image_type)
 
     
 def batch_upload(folder):
     
-    for imagepath in os.listdir(folder):
+    files = filter(lambda f: os.path.isfile(os.path.join(folder, f)), os.listdir(folder))
+    
+    for imagepath in sorted(files):
+        print(imagepath)
         upload_image(imagepath)
         
         
-if __name__ == '__main__':
-    batch_upload(local_folder)
+# if __name__ == '__main__':
+#     batch_upload(local_folder)
