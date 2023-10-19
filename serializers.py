@@ -27,10 +27,11 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
     plans_count = SerializerMethodField()
     threedhop_count = SerializerMethodField()
     pointcloud_count = SerializerMethodField()
+    first_photograph_id = SerializerMethodField()
     
     class Meta:
         model = Place
-        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id', 'photographs_count', 'plans_count', 'threedhop_count', 'pointcloud_count']
+        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id', 'photographs_count', 'plans_count', 'threedhop_count', 'pointcloud_count', 'first_photograph_id']
         geo_field = 'geometry'
         depth = 1
             
@@ -45,6 +46,13 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
     
     def get_pointcloud_count(self, obj):
         return obj.object_pointcloud.count()
+    
+    def get_first_photograph_id(self, obj):
+        try: 
+            first_object = obj.images.filter(type_of_image__text="photograph").values()[0]
+        except:
+            first_object = []
+        return first_object
 
 
 class LayerSerializer(DynamicDepthSerializer):

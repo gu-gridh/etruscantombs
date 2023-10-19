@@ -179,8 +179,8 @@ class Place(abstract.AbstractBaseModel):
 class Image(abstract.AbstractTIFFImageModel):
 
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
-    tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="images")
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
+    tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.SET_NULL, related_name="images")
     type_of_image = models.ManyToManyField(TypeOfImage, blank=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
     date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
