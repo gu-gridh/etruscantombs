@@ -27,11 +27,15 @@ def upload_image(filename):
     
     try:
         # if format isn't recognized, return nothing
-        tomb_name, author, creation_date, image_type, _ = filename.split("_")
+        tomb_name, author, creation_date, image_type, identifier = filename.split("_")
     except:
-        return
+        try:
+            tomb_name, author, creation_date, image_type, identifier, hdr = filename.split("_")
+        except:
+            return
     
     author_firstname, author_lastname = author.split("-")
+    tomb_name = tomb_name.strip('0')
     
     tomb = get_or_none(Place, **{"name": tomb_name})
     author = get_or_none(Author, **{"firstname": author_firstname, "lastname": author_lastname})
