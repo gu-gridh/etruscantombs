@@ -45,7 +45,7 @@ def upload_image(filename):
         image = Image(
             author = author,
             tomb = tomb,
-            file = os.path("etruscantombs/original", filename),
+            file = os.path.join("etruscantombs/original", filename),
             date = creation_date
         ) # title = f"Documentation {identifier}",
     
