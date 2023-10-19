@@ -12,6 +12,6 @@ class Command(BaseCommand):
         folder_path = options["root"]
         
         if folder_path is None:
-            folder_path = MEDIA_ROOT
+            folder_path = MEDIA_ROOT + 'etruscantombs/original/'
         
         batch_upload(folder_path)

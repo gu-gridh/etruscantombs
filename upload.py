@@ -24,7 +24,7 @@ def fetch_tomb_id_from_name(filename):
     return tomb.id
 
 def upload_image(filename):
-    tomb_name, author, creation_date, image_type, identifier = filename.split("_")
+    tomb_name, author, creation_date, image_type, _ = filename.split("_")
     
     author_firstname, author_lastname = author.split("-")
     
@@ -33,12 +33,11 @@ def upload_image(filename):
     image_type = get_or_none(TypeOfImage, **{"text": image_type})
     
     image = Image(
-        title = "Documentation",
         author = author,
         tomb = tomb,
         file = filename,
         date = creation_date
-    )
+    ) # title = f"Documentation {identifier}",
     
     image.save()
     image.type_of_image.add(image_type)
@@ -50,7 +49,9 @@ def batch_upload(folder):
     
     for imagepath in sorted(files):
         print(imagepath)
-        upload_image(imagepath)
+        file_name_proper, extension = imagepath.split(".")
+        if extension == "jpg":
+            upload_image(imagepath)
         
         
 # if __name__ == '__main__':
