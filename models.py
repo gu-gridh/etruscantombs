@@ -137,15 +137,15 @@ class Place(abstract.AbstractBaseModel):
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Please enter the name of the tomb"))
     subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"), default = None)    
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
-    necropolis = models.ForeignKey(Necropolis, null=True, blank=True, on_delete=models.CASCADE)
-    type = models.ForeignKey(TypeOfTomb, on_delete=models.CASCADE, null=True, blank=True, help_text=_("Type of the tomb"))
+    necropolis = models.ForeignKey(Necropolis, null=True, blank=True, on_delete=models.SET_NULL)
+    type = models.ForeignKey(TypeOfTomb, on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Type of the tomb"))
     number_of_chambers = models.FloatField(null=True, blank=True, verbose_name=_("number of chambers"))
     tags = models.ManyToManyField(Tag, blank=True, help_text=_("Tags attached to the tomb"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the tomb"))
-    epoch = models.ForeignKey(Epoch, on_delete=models.CASCADE, blank=True, null=True, help_text=_("Dating of the tomb"))
-    default_image = models.ForeignKey("Image", on_delete=models.CASCADE, null=True, blank=True, help_text=_("Default image showing on preview"))
-    default_3DHop = models.ForeignKey("Object3DHop", on_delete=models.CASCADE, null=True, blank=True, help_text=_("Default image showing on preview"))
-    default_pointcloud = models.ForeignKey("ObjectPointCloud", on_delete=models.CASCADE, null=True, blank=True, help_text=_("Default image showing on preview"))
+    epoch = models.ForeignKey(Epoch, on_delete=models.SET_NULL, blank=True, null=True, help_text=_("Dating of the tomb"))
+    default_image = models.ForeignKey("Image", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Default image showing on preview"))
+    default_3DHop = models.ForeignKey("Object3DHop", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Default image showing on preview"))
+    default_pointcloud = models.ForeignKey("ObjectPointCloud", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Default image showing on preview"))
 
     def __str__(self) -> str:
         return self.name
@@ -180,7 +180,7 @@ class Image(abstract.AbstractTIFFImageModel):
 
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
-    tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.SET_NULL, related_name="images")
+    tomb   = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="images")
     type_of_image = models.ManyToManyField(TypeOfImage, blank=True)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
     date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
@@ -214,7 +214,7 @@ class Image(abstract.AbstractTIFFImageModel):
 
 class Layer(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, blank=True, null=True)
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     type = models.CharField(max_length=32, null=True, blank=True)
     format = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpeg, png, etc."))
@@ -233,7 +233,7 @@ class Object3DHop(abstract.AbstractBaseModel):
     triangles_full_resolution = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Triangles (full resolution)"), help_text=_("number of triangles of the full resolution mesh, e.g.: 1.3 billions"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
     date = models.DateField(default=date.today, help_text=_("Date in which the 3D object was created"))
-    technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.CASCADE, help_text=_("Technique used to generate the 3D model"))
+    technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.SET_NULL, help_text=_("Technique used to generate the 3D model"))
     scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
     
     trackball_start = ArrayField(models.FloatField(), size=6, default=list)
@@ -243,7 +243,7 @@ class Object3DHop(abstract.AbstractBaseModel):
     min_max_phi = ArrayField(models.FloatField(), size=2, default=get_min_max_default, verbose_name=_("maximal vertical camera angles"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
     min_max_theta = ArrayField(models.FloatField(), size=2, default=get_min_max_default, verbose_name=_("maximal horizontal camera angles"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
 
-    preview_image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, blank=True)
+    preview_image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
 
     def __str__(self) -> str:
@@ -268,13 +268,13 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
     points_full_resolution = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Points (full resolution)"),  help_text=_("number of points of the full resolution model, e.g.: 1.3 billions"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
     date = models.DateField(default=date.today, help_text=_("Date in which the 3D object was created"))
-    technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.CASCADE, help_text=_("Technique used to generate the 3D model"))
+    technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.SET_NULL, help_text=_("Technique used to generate the 3D model"))
     scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
 
     camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
 
-    preview_image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, blank=True)
+    preview_image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -286,7 +286,7 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
 
 class Document(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
     place = models.ManyToManyField(Place, blank=True, related_name="documentation")
     upload = models.FileField(null=True, blank=True, storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("file"), validators=[validate_file_extension])
     type = models.ManyToManyField(TypeOfDocument, blank=True, verbose_name=_("Type of document: Report, Thesis, etc"))
@@ -303,7 +303,7 @@ class Document(abstract.AbstractBaseModel):
 
 class Observation(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, null=True, blank=True)
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="observation")
     observation = RichTextField(null=True, blank=True, help_text=("Write observation here"))
     type = models.ManyToManyField(TypeOfObservation, blank=True, verbose_name=_("Type of the observation: Survey, Damage report, etc"))
