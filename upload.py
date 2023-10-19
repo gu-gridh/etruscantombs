@@ -25,22 +25,25 @@ def fetch_tomb_id_from_name(filename):
 
 def upload_image(filename):
     tomb_name, author, creation_date, image_type, _ = filename.split("_")
-    
+
     author_firstname, author_lastname = author.split("-")
     
     tomb = get_or_none(Place, **{"name": tomb_name})
     author = get_or_none(Author, **{"firstname": author_firstname, "lastname": author_lastname})
     image_type = get_or_none(TypeOfImage, **{"text": image_type})
     
-    image = Image(
-        author = author,
-        tomb = tomb,
-        file = filename,
-        date = creation_date
-    ) # title = f"Documentation {identifier}",
+    fetch_existing_image = Image.objects.filter(file__url__icontains="filename")
+    if len(fetch_existing_image) == 0:
+        print(filename)
+        image = Image(
+            author = author,
+            tomb = tomb,
+            file = filename,
+            date = creation_date
+        ) # title = f"Documentation {identifier}",
     
-    image.save()
-    image.type_of_image.add(image_type)
+        image.save()
+        image.type_of_image.add(image_type)
 
     
 def batch_upload(folder):
@@ -48,11 +51,9 @@ def batch_upload(folder):
     files = filter(lambda f: os.path.isfile(os.path.join(folder, f)), os.listdir(folder))
     
     for imagepath in sorted(files):
-        print(imagepath)
+        
         file_name_proper, extension = imagepath.split(".")
+        
         if extension == "jpg":
             upload_image(imagepath)
         
-        
-# if __name__ == '__main__':
-#     batch_upload(local_folder)
