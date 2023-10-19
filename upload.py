@@ -24,17 +24,24 @@ def fetch_tomb_id_from_name(filename):
     return tomb.id
 
 def upload_image(filename):
-    tomb_name, author, creation_date, image_type, _ = filename.split("_")
-
+    
+    try:
+        # if format isn't recognized, return nothing
+        tomb_name, author, creation_date, image_type, _ = filename.split("_")
+    except:
+        return
+    
     author_firstname, author_lastname = author.split("-")
     
     tomb = get_or_none(Place, **{"name": tomb_name})
     author = get_or_none(Author, **{"firstname": author_firstname, "lastname": author_lastname})
     image_type = get_or_none(TypeOfImage, **{"text": image_type})
     
-    fetch_existing_image = Image.objects.filter(file__url__icontains="filename")
+    print(f"Managing file {filename}")
+    fetch_existing_image = Image.objects.filter(file__icontains=filename)
+    
     if len(fetch_existing_image) == 0:
-        print(filename)
+        print(f"Uploading file {filename}")
         image = Image(
             author = author,
             tomb = tomb,
@@ -54,6 +61,12 @@ def batch_upload(folder):
         
         file_name_proper, extension = imagepath.split(".")
         
-        if extension == "jpg":
+        try:
+            tomb_name = int(file_name_proper[:3])
+            is_tomb_file = isinstance(tomb_name, int)
+        except:
+            is_tomb_file = False
+            
+        if extension == "jpg" and is_tomb_file:
             upload_image(imagepath)
         
