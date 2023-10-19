@@ -45,7 +45,7 @@ def upload_image(filename):
         image = Image(
             author = author,
             tomb = tomb,
-            file = filename,
+            file = f'/etruscantombs/original/{filename}',
             date = creation_date
         ) # title = f"Documentation {identifier}",
     
