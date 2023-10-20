@@ -48,11 +48,13 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
         return obj.object_pointcloud.count()
     
     def get_first_photograph_id(self, obj):
+        
         try: 
-            first_object = obj.images.filter(type_of_image__text="photograph").values()[0]
+            object_to_display = obj.images.filter(type_of_image__text="photograph").values()[0]
         except:
-            first_object = []
-        return first_object
+            object_to_display = []
+        
+        return object_to_display
 
 
 class LayerSerializer(DynamicDepthSerializer):

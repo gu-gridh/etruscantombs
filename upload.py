@@ -35,7 +35,7 @@ def upload_image(filename):
             return
     
     author_firstname, author_lastname = author.split("-")
-    tomb_name = tomb_name.strip('0')
+    tomb_name = str(int(tomb_name))
     
     tomb = get_or_none(Place, **{"name": tomb_name})
     author = get_or_none(Author, **{"firstname": author_firstname, "lastname": author_lastname})
@@ -55,6 +55,9 @@ def upload_image(filename):
     
         image.save()
         image.type_of_image.add(image_type)
+    else:
+        print(f"Changing file {filename}")
+        fetch_existing_image.update(tomb=tomb)
 
     
 def batch_upload(folder):
