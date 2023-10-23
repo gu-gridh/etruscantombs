@@ -120,14 +120,14 @@ class AuthorAdmin(admin.ModelAdmin):
 
 @admin.register(Object3DHop)
 class Object3DHopAdmin(admin.ModelAdmin):
-    list_display = ['title', 'tomb', 'scaled', 'preview_image'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
+    list_display = ['title', 'scaled', 'preview_image'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
     autocomplete_fields = ['preview_image']
 
 
 @admin.register(ObjectPointCloud)
 class ObjectPointCloudAdmin(admin.ModelAdmin):
-    list_display = ['title', 'tomb', 'scaled', 'preview_image'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
+    list_display = ['title', 'scaled', 'preview_image'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
     autocomplete_fields = ['preview_image']
 
