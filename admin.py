@@ -123,6 +123,7 @@ class Object3DHopAdmin(admin.ModelAdmin):
     list_display = ['title', 'scaled', 'preview_image'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
     autocomplete_fields = ['preview_image']
+    filter_horizontal = ['tomb']
 
 
 @admin.register(ObjectPointCloud)
@@ -130,6 +131,7 @@ class ObjectPointCloudAdmin(admin.ModelAdmin):
     list_display = ['title', 'scaled', 'preview_image'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
     autocomplete_fields = ['preview_image']
+    filter_horizontal = ['tomb']
 
 
 @admin.register(Document)
