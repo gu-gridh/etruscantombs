@@ -8,7 +8,7 @@ from django.db.models import Q
 
 class PlaceGeoViewSet(GeoViewSet):
 
-    queryset = models.Place.objects.all().order_by('id')
+    # queryset = models.Place.objects.all().order_by('id')
     serializer_class = serializers.PlaceGeoSerializer
     filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry', 'threedhop_count', 'pointcloud_count'])
     search_fields = ['placename'] # this does nothing!!
