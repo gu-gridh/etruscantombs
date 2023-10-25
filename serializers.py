@@ -50,7 +50,7 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
     def get_first_photograph_id(self, obj):
         
         try: 
-            object_to_display = obj.images.filter(type_of_image__text="photograph").values()[0]
+            object_to_display = obj.images.filter(type_of_image__text="photograph").filter(published=True).values()[0]
         except:
             object_to_display = []
         
