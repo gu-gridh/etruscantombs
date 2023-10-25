@@ -19,7 +19,7 @@ class PlaceGeoViewSet(GeoViewSet):
         queryset = models.Place.objects.all().order_by('id')
         with_3D = self.request.query_params.get('with_3D')
         if with_3D:
-            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False))# (object_3Dhop__isnull=False or object_pointcloud__isnull=False)
+            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct() # (object_3Dhop__isnull=False or object_pointcloud__isnull=False)
         
         return queryset
         
