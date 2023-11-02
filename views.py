@@ -18,8 +18,12 @@ class PlaceGeoViewSet(GeoViewSet):
     def get_queryset(self):
         queryset = models.Place.objects.all().order_by('id')
         with_3D = self.request.query_params.get('with_3D')
+        with_plan = self.request.query_params.get('with_plan')
+        
         if with_3D:
-            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct() # (object_3Dhop__isnull=False or object_pointcloud__isnull=False)
+            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
+        if with_plan:
+            queryset = queryset.filter(images__type_of_image__text__exact="floor plan").distinct()
         
         return queryset
         
