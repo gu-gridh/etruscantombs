@@ -5,7 +5,7 @@ from django.utils.html import format_html
 from django.contrib.gis import admin
 from django.utils.translation import gettext_lazy as _
 from diana.utils import get_fields, DEFAULT_FIELDS, DEFAULT_EXCLUDE
-from admin_auto_filters.filters import AutocompleteFilter
+from admin_auto_filters.filters import AutocompleteFilter, AutocompleteFilterFactory
 from rangefilter.filters import NumericRangeFilter
 from django.contrib.admin import EmptyFieldListFilter
 
@@ -81,8 +81,8 @@ class TypeOfObservationAdmin(admin.ModelAdmin):
 
 
 class PlaceFilter(AutocompleteFilter):
-    title = _('Place') # display title
-    field_name = 'place' # name of the foreign key field
+    title = _('Tomb') # display title
+    field_name = 'tomb' # name of the foreign key field
 
 
 @admin.register(Image)
@@ -91,8 +91,8 @@ class ImageModel(admin.ModelAdmin):
     fields              = ['image_preview', *get_fields(Image, exclude=['id'])]
     readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
     autocomplete_fields = ['tomb', 'author']
-    list_display        = ['thumbnail_preview', 'title', 'tomb', 'file']
-    search_fields       = ['title', 'tomb__name', 'type_of_image__text']
+    list_display        = ['thumbnail_preview', 'title', 'tomb', 'file', 'author']
+    search_fields       = ['title', 'tomb__name', 'file']
     list_filter         = [PlaceFilter]
     
     list_per_page = 10
