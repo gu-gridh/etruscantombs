@@ -14,14 +14,15 @@ router.register(rf'{endpoint}/document', views.DocumentViewSet, basename='docume
 router.register(rf'{endpoint}/object3dhop', views.Object3DHopViewSet, basename='object 3D hop')
 router.register(rf'{endpoint}/objectpointcloud', views.ObjectPointcloudViewSet, basename='object point cloud')
 router.register(rf'{endpoint}/necropolis', views.NecropolisViewSet, basename='necropolis')
+router.register(rf'{endpoint}/coordinates', views.PlaceCoordinatesViewSet, basename='coordinates')
 
 urlpatterns = [
     path('', include(router.urls)),
 
     # Automatically generated views
     *utils.get_model_urls('etruscantombs', endpoint, 
-        exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis']),
+        exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis', 'coordinates']),
 
-    *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis']),
+    *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis', 'coordinates']),
     *documentation
 ]

@@ -28,6 +28,11 @@ class PlaceGeoViewSet(GeoViewSet):
         return queryset
         
 
+class PlaceCoordinatesViewSet(GeoViewSet):
+    serializer_class = serializers.PlaceCoordinatesSerializer
+    queryset = models.Place.objects.all()
+    filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
+
 
 class IIIFImageViewSet(DynamicDepthViewSet):
     """
