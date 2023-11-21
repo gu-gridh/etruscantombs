@@ -30,7 +30,7 @@ class PlaceGeoViewSet(GeoViewSet):
 
 class PlaceCoordinatesViewSet(GeoViewSet):
     serializer_class = serializers.PlaceCoordinatesSerializer
-    queryset = models.Place.objects.all()
+    queryset = models.Place.objects.all().order_by('id')
     filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
 
 
