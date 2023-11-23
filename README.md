@@ -17,3 +17,6 @@ One can also specify a `folder` where data do be uploaded is stored, by adding `
 The `typeOfImage` needs to correspond to one of the `TypeOfImage` classes in the data models.
 
 The load script takes care of only uploading images that are not already uploaded on the database.
+
+## Database and API documentation
+The Etruscan Chamber TOmbs project makes available compliant REST APIs (including GeoJSON API), generated through the Django REST framework, that also the frontend relies upon.
