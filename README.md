@@ -1,6 +1,6 @@
 # Etruscan Tombs
 
-This is the repository for the Django application of the Etruscan Tombs project, led by Jonathan Westin at GRIDH. This project is developed as an app in Diana. It is developed as an initial clone of the [Jubileum portal](https://github.com/gu-gridh/jubileum). The developers attached to the project are Matteo Tomasini and Tristan Bridge. This Diana application has been developed and is maintained by Matteo Tomasini. The public frontend of Etruscan Chamber Tombs is developed as a project within [Multimodal Map](https://github.com/gu-gridh/multimodal-map) (MuM), a repository of user interface modules developed by GRIDH specifically aimed at spatio-temporal visualisations. 
+This is the repository for the Django application of the Etruscan Tombs project, led by Jonathan Westin at GRIDH. This project is developed as an app in Diana. It is developed as an initial clone of the [Jubileum portal](https://github.com/gu-gridh/jubileum). Additional developers attached to the project are Matteo Tomasini and Tristan Bridge. This Diana application has been developed and is maintained by Matteo Tomasini. The public frontend of Etruscan Chamber Tombs is developed as a project within [Multimodal Map](https://github.com/gu-gridh/multimodal-map) (MuM), a repository of user interface modules developed by GRIDH specifically aimed at spatio-temporal visualisations. 
 
 
 
