@@ -20,3 +20,6 @@ The load script takes care of only uploading images that are not already uploade
 
 ## Database and API documentation
 The backend solution upon which The Etruscan Chamber Tombs portal is developed allows for consistent data input, and facilitates the interaction of end-users with the data shown in the frontend. To make the data open and reusable The Etruscan Chamber Tombs project makes available compliant REST APIs (including GeoJSON API), generated through the Django REST framework. These are the same APIs the projects's own frontend relies upon. Below follows a description of the APIs. [under construction]
+
+### APIs
+https://diana.dh.gu.se/api/etruscantombs/geojson/place/
