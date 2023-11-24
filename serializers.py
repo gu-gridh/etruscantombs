@@ -92,18 +92,18 @@ class ObjectPointCloudSerializer(DynamicDepthSerializer):
 
 
 class DocumentSerializer(DynamicDepthSerializer):
-    place_names = SerializerMethodField()
+    type_names = SerializerMethodField()
     
     class Meta:
         model = Document
-        fields = get_fields(Document, exclude=DEFAULT_FIELDS)+ ['id', 'place_names']
+        fields = get_fields(Document, exclude=DEFAULT_FIELDS)+ ['id', 'type_names']
 
-    def get_place_names(self, obj):
-        tomb_names = []
-        attached_tombs = obj.place.all()
-        for tomb in attached_tombs:
-            tomb_names.append(tomb.name)
-        return tomb_names
+    def get_type_names(self, obj):
+        type_names = []
+        types = obj.type.all()
+        for type in types:
+            type_names.append(type.text)
+        return type_names
     
     
 class ObservationSerializer(DynamicDepthSerializer):
