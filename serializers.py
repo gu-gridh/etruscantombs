@@ -39,7 +39,9 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
         return obj.images.filter(type_of_image__text="photograph").count()
         
     def get_plans_count(self, obj):
-        return obj.images.filter(type_of_image__text="floor plan").count()
+        floor_plans = obj.images.filter(type_of_image__text="floor plan").count()
+        section_plans = obj.images.filter(type_of_image__text="section").count()
+        return floor_plans + section_plans
     
     def get_threedhop_count(self, obj):
         return obj.object_3Dhop.count()

@@ -23,7 +23,7 @@ class PlaceGeoViewSet(GeoViewSet):
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
         if with_plan:
-            queryset = queryset.filter(images__type_of_image__text__exact="floor plan").distinct()
+            queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
         
         return queryset
         
@@ -41,7 +41,7 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
         if with_plan:
-            queryset = queryset.filter(images__type_of_image__text__exact="floor plan").distinct()
+            queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
         
         return queryset
 
