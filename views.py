@@ -49,19 +49,19 @@ class TmobsInfoViewSet(DynamicDepthViewSet):
         places = models.Place.objects.all()
         
         if with_3D:
-            places = places.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
+            places = places.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False))
         
         if with_plan:
             places = places.filter(Q(images__type_of_image__text__exact="floor plan") 
-                                  |Q(images__type_of_image__text__exact="section")).distinct()
+                                  |Q(images__type_of_image__text__exact="section"))
         if period:
-            places = places.filter(epoch__text__icontains=period).distinct()            
+            places = places.filter(epoch__text__exact=period)           
 
         if necropolis:
-            places = places.filter(necropolis__text__exact=necropolis).distinct()
+            places = places.filter(necropolis__text__exact=necropolis)
 
         if type_of_tomb:
-            places = places.filter(type__text__exact=type_of_tomb).distinct()
+            places = places.filter(type__text__exact=type_of_tomb)
             
         
         hidden_tombs = all_tombs -  places.all().count()
