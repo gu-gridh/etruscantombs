@@ -55,13 +55,13 @@ class TmobsInfoViewSet(DynamicDepthViewSet):
             places = places.filter(Q(images__type_of_image__text__exact="floor plan") 
                                   |Q(images__type_of_image__text__exact="section"))
         if period:
-            places = places.filter(epoch__text__exact=period)           
+            places = places.filter(epoch__id=period)           
 
         if necropolis:
-            places = places.filter(necropolis__text__exact=necropolis)
+            places = places.filter(necropolis__id=necropolis)
 
         if type_of_tomb:
-            places = places.filter(type__text__exact=type_of_tomb)
+            places = places.filter(type__id=type_of_tomb)
             
         
         hidden_tombs = all_tombs -  places.all().count()
