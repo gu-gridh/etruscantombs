@@ -42,7 +42,7 @@ class TmobsInfoViewSet(DynamicDepthViewSet):
         with_plan = self.request.query_params.get('with_plan')
         period = self.request.query_params.get('epoch')
         necropolis = self.request.query_params.get('necropolis')
-        type_of_tomb = self.request.query_params.get('tomb_type')
+        type_of_tomb = self.request.query_params.get('type')
 
         # Filtering places 
         all_tombs = models.Place.objects.all().count()
