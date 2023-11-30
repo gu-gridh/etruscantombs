@@ -84,7 +84,7 @@ class TmobsInfoViewSet(DynamicDepthViewSet):
             'all_tombs': all_tombs,
             'hidden_tombs': hidden_tombs,
             'photographs': photographs_count,
-            'drwaing': plans_count,
+            'drawing ': plans_count,
             'objects_3d' : objects_3d
         }
 
