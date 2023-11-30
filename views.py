@@ -63,8 +63,8 @@ class TmobsInfoViewSet(DynamicDepthViewSet):
         if type_of_tomb:
             places = places.filter(type__id=type_of_tomb)
             
-        
-        hidden_tombs = all_tombs -  places.all().count()
+        tombs_shown = places.all().count()
+        hidden_tombs = all_tombs -  tombs_shown
 
         plans_count =  places.filter(id__in=list(
                             models.Image.objects.filter(Q(type_of_image__text__icontains="floor plan") 
@@ -82,9 +82,10 @@ class TmobsInfoViewSet(DynamicDepthViewSet):
         
         data = {
             'all_tombs': all_tombs,
+            'shown_tombs': tombs_shown,
             'hidden_tombs': hidden_tombs,
             'photographs': photographs_count,
-            'drawing ': plans_count,
+            'drawing': plans_count,
             'objects_3d' : objects_3d
         }
 
