@@ -35,8 +35,6 @@ class TmobsInfoViewSet(DynamicDepthViewSet):
     serializer_class = serializers.PlaceSerializer
 
     def list(self, request):
-        results = {}
-
         # Query Parameters 
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
