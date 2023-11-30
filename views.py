@@ -1,10 +1,11 @@
 from unittest.mock import DEFAULT
 from . import models, serializers
-from django.db.models import Prefetch, Q
+from django.db.models import Q
 from diana.abstract.views import DynamicDepthViewSet, GeoViewSet
 from diana.abstract.models import get_fields, DEFAULT_FIELDS
 from django.db.models import Q
-
+from django.http import HttpResponse
+import json
 
 class PlaceGeoViewSet(GeoViewSet):
 
@@ -27,6 +28,68 @@ class PlaceGeoViewSet(GeoViewSet):
         
         return queryset
         
+
+
+class TmobsInfoViewSet(DynamicDepthViewSet):
+
+    serializer_class = serializers.PlaceSerializer
+
+    def list(self, request):
+        results = {}
+
+        # Query Parameters 
+        with_3D = self.request.query_params.get('with_3D')
+        with_plan = self.request.query_params.get('with_plan')
+        period = self.request.query_params.get('epoch')
+        necropolis = self.request.query_params.get('necropolis')
+        type_of_tomb = self.request.query_params.get('tomb_type')
+
+        # Filtering places 
+        all_tombs = models.Place.objects.all().count()
+        places = models.Place.objects.all()
+        
+        if with_3D:
+            places = places.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
+        
+        if with_plan:
+            places = places.filter(Q(images__type_of_image__text__exact="floor plan") 
+                                  |Q(images__type_of_image__text__exact="section")).distinct()
+        if period:
+            places = places.filter(epoch__text__exact=period).distinct()            
+
+        if necropolis:
+            places = places.filter(necropolis__text__exact=necropolis).distinct()
+
+        if type_of_tomb:
+            places = places.filter(type__text__exact=type_of_tomb).distinct()
+            
+        
+        hidden_tombs = all_tombs -  places.all().count()
+
+        plans_count =  places.filter(id__in=list(
+                            models.Image.objects.filter(Q(type_of_image__text="floor plan") 
+                                                      | Q (type_of_image__text="section"))
+                                                        .values_list('tomb', flat=True))).count()
+        
+        photographs_count = places.filter(id__in=list(
+                            models.Image.objects.filter(type_of_image__text="photograph").values_list('tomb', flat=True))
+                            ).count()
+        
+
+        threedhop_count = places.filter(id__in=list(models.Object3DHop.objects.all().values_list('tomb', flat=True))).count()
+        pointcloud_count = places.filter(id__in=list(models.ObjectPointCloud.objects.all().values_list('tomb', flat=True))).count()
+        objects_3d = threedhop_count + pointcloud_count
+        
+        data = {
+            'all_tombs': all_tombs,
+            'hidden_tombs': hidden_tombs,
+            'photographs': photographs_count,
+            'drwaing': plans_count,
+            'objects_3d' : objects_3d
+        }
+
+        return HttpResponse(json.dumps(data))
+    
 
 class PlaceCoordinatesViewSet(GeoViewSet):
     serializer_class = serializers.PlaceCoordinatesSerializer
