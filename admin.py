@@ -116,6 +116,12 @@ class LayerAdmin(admin.ModelAdmin):
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ['lastname', 'firstname']# [*get_fields(Author, exclude=['id'])]
     search_fields = ['firstname', 'lastname']
+    
+    
+@admin.register(Dataset)
+class DatasetAdmin(admin.ModelAdmin):
+    list_display = ['name', 'short_name']# [*get_fields(Author, exclude=['id'])]
+    search_fields = ['name', 'short_name']
 
 
 @admin.register(Object3DHop)
