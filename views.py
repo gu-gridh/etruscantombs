@@ -167,3 +167,10 @@ class NecropolisViewSet(DynamicDepthViewSet):
     queryset = models.Necropolis.objects.all().order_by('text')
     serializer_class = serializers.NecropolisSerializer
     filterset_fields = get_fields(models.Necropolis, exclude=DEFAULT_FIELDS+['geometry'])
+    
+    
+class DatasetViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Dataset.objects.all().order_by('short_name')
+    serializer_class = serializers.DatasetSerializer
+    filterset_fields = get_fields(models.Dataset, exclude=DEFAULT_FIELDS+['geometry'])

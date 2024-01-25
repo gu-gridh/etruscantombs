@@ -78,6 +78,14 @@ class AuthorSerializer(DynamicDepthSerializer):
     class Meta:
         model = Author
         fields = get_fields(Author, exclude=DEFAULT_FIELDS)+ ['id']
+        
+        
+class DatasetSerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = Dataset
+        fields = get_fields(Dataset, exclude=DEFAULT_FIELDS)+ ['id']
+
 
 class Object3DHopSerializer(DynamicDepthSerializer):
     

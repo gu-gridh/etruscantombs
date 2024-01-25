@@ -130,12 +130,21 @@ class Author(abstract.AbstractBaseModel):
     def __str__(self) -> str:
         return f"{self.firstname} {self.lastname}"
     
+    
+class Dataset(abstract.AbstractBaseModel):
+    name = models.CharField(max_length=1024, blank=True, null=True, help_text=("Full name of the dataset"))
+    short_name = models.CharField(max_length=64, blank=True, null=True, help_text=("Name of the dataset to use for filtering"))
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the dataset"))
+
+    def __str__(self) -> str:
+        return self.short_name
 
 # Place
 class Place(abstract.AbstractBaseModel):
     
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Please enter the name of the tomb"))
-    subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"), default = None)    
+    subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"), default = None)
+    # dataset = models.ManyToManyField(Dataset, blank)
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     necropolis = models.ForeignKey(Necropolis, null=True, blank=True, on_delete=models.SET_NULL)
     type = models.ForeignKey(TypeOfTomb, on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Type of the tomb"))
