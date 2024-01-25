@@ -9,7 +9,7 @@ endpoint = utils.build_app_endpoint("etruscantombs")
 documentation = utils.build_app_api_documentation("etruscantombs", endpoint)
 
 router.register(rf'{endpoint}/geojson/place', views.PlaceGeoViewSet, basename='place on geojson')
-router.register(rf'{endpoint}/info/tombs', views.TmobsInfoViewSet, basename='tombs information')
+router.register(rf'{endpoint}/info/tombs', views.TombsInfoViewSet, basename='tombs information')
 router.register(rf'{endpoint}/image', views.IIIFImageViewSet, basename='image')
 router.register(rf'{endpoint}/document', views.DocumentViewSet, basename='document')
 router.register(rf'{endpoint}/object3dhop', views.Object3DHopViewSet, basename='object 3D hop')

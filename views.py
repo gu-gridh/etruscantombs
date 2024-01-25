@@ -30,7 +30,7 @@ class PlaceGeoViewSet(GeoViewSet):
         
 
 
-class TmobsInfoViewSet(DynamicDepthViewSet):
+class TombsInfoViewSet(DynamicDepthViewSet):
 
     serializer_class = serializers.PlaceSerializer
 
@@ -164,6 +164,6 @@ class ObservationViewSet(DynamicDepthViewSet):
 
 class NecropolisViewSet(DynamicDepthViewSet):
     
-    queryset = models.Necropolis.objects.all()
+    queryset = models.Necropolis.objects.all().order_by('text')
     serializer_class = serializers.NecropolisSerializer
     filterset_fields = get_fields(models.Necropolis, exclude=DEFAULT_FIELDS+['geometry'])
