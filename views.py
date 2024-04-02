@@ -1,9 +1,10 @@
 from unittest.mock import DEFAULT
 from . import models, serializers
-from django.db.models import Q
 from diana.abstract.views import DynamicDepthViewSet, GeoViewSet
 from diana.abstract.models import get_fields, DEFAULT_FIELDS
-from django.db.models import Q
+from django.db.models import Q, F, Value, TextField
+from django.db.models.expressions import Func
+from django.contrib.postgres.fields import ArrayField
 from django.http import HttpResponse
 import json
 
@@ -96,6 +97,15 @@ class PlaceCoordinatesViewSet(GeoViewSet):
     filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
     
     def get_queryset(self):
+        
+        formatted_epoch = Func(
+            F('epoch__text'),
+            Value("-"),
+            function='regexp_split_to_array', output=ArrayField(TextField())
+        )
+        
+        queryset = models.Place.objects.all().order_by('id').annotate(min_year=formatted_epoch)
+        
         queryset = models.Place.objects.all().order_by('id')
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
