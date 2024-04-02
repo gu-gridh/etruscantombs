@@ -111,6 +111,7 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         if oldest_epoch and newest_epoch:
             lower = min(oldest_epoch, newest_epoch)
             higher = max(oldest_epoch, newest_epoch)
+            unknown_id = 1 # it's 4 for debugging
             
             # this is quite specific to how the data is currently coded:
             # id = 1 : Unknown
@@ -121,9 +122,12 @@ class PlaceCoordinatesViewSet(GeoViewSet):
             # thus if looking for oldest = 5 and newest = 7, it should return all numbers >= 5 and <= 7
 
             if show_unknown:
-                queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher) | Q(epoch_id=4))
+                queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher) | Q(epoch_id=unknown_id))
             else:
                 queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher))
+                
+        if show_unknown:        
+            queryset = queryset.filter(Q(epoch_id=unknown_id))
         
         
         return queryset
