@@ -59,12 +59,34 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
         return object_to_display
 
 class PlaceCoordinatesSerializer(GeoFeatureModelSerializer):
+    min_time = SerializerMethodField()
+    max_time = SerializerMethodField()
+    
     class Meta:
         model = Place
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'min_time', 'max_time']
         geo_field = 'geometry'
         depth = 1
+    
+    def get_min_time(self, obj):
+        try:
+            epoch_string = obj.epoch.text
+            min_time, max_time = epoch_string.split('-')
         
+            return int(min_time)
+        except:
+            return None
+        
+    def get_max_time(self, obj):
+        try:
+            epoch_string = obj.epoch.text
+            min_time, max_time = epoch_string.split('-')
+            max_time, bc = max_time.split(' ')
+        
+            return int(max_time)
+        except:
+            return None
+
 
 class LayerSerializer(DynamicDepthSerializer):
 
