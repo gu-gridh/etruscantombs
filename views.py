@@ -99,11 +99,32 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         queryset = models.Place.objects.all().order_by('id')
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
+        oldest_epoch = self.request.query_params.get('oldest_epoch')
+        newest_epoch = self.request.query_params.get('newest_epoch')
+        show_unknown = self.request.query_params.get('show_unknown')
         
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
+        
+        if oldest_epoch and newest_epoch:
+            lower = min(oldest_epoch, newest_epoch)
+            higher = max(oldest_epoch, newest_epoch)
+            
+            # this is quite specific to how the data is currently coded:
+            # id = 1 : Unknown
+            # id = 5 : 700-650 BC
+            # id = 6 : 625-400 BC
+            # id = 7 : 400-200 BC
+            
+            # thus if looking for oldest = 5 and newest = 7, it should return all numbers >= 5 and <= 7
+
+            if show_unknown:
+                queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher) | Q(epoch_id=4))
+            else:
+                queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher))
+        
         
         return queryset
 
