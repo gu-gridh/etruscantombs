@@ -7,6 +7,8 @@ from django.db.models import Q
 from django.http import HttpResponse
 import json
 
+DEBUG_UNKNOWN_ID = 1  # it's 4 for debugging
+
 class PlaceGeoViewSet(GeoViewSet):
 
     # queryset = models.Place.objects.all().order_by('id')
@@ -41,6 +43,9 @@ class TombsInfoViewSet(DynamicDepthViewSet):
         period = self.request.query_params.get('epoch')
         necropolis = self.request.query_params.get('necropolis')
         type_of_tomb = self.request.query_params.get('type')
+        oldest_epoch = self.request.query_params.get('oldest_epoch')
+        newest_epoch = self.request.query_params.get('newest_epoch')
+        show_unknown = self.request.query_params.get('show_unknown')
 
         # Filtering places 
         all_tombs = models.Place.objects.all().count()
@@ -60,6 +65,32 @@ class TombsInfoViewSet(DynamicDepthViewSet):
 
         if type_of_tomb:
             places = places.filter(type__id=type_of_tomb)
+            
+        unknown_id = DEBUG_UNKNOWN_ID
+        
+        if oldest_epoch and newest_epoch and show_unknown:
+            lower = min(oldest_epoch, newest_epoch)
+            higher = max(oldest_epoch, newest_epoch)
+            
+            # this is quite specific to how the data is currently coded:
+            # id = 1 : Unknown (4 for debugging)
+            # id = 5 : 700-650 BC
+            # id = 6 : 625-400 BC
+            # id = 7 : 400-200 BC
+            
+            # thus if looking for oldest = 5 and newest = 7, it should return all numbers >= 5 and <= 7
+
+            if show_unknown == 'true':
+                places = places.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher) | Q(epoch_id=unknown_id)).distinct()
+            else:
+                places = places.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher)).distinct()
+        elif oldest_epoch and newest_epoch:
+            lower = min(oldest_epoch, newest_epoch)
+            higher = max(oldest_epoch, newest_epoch)
+            places = places.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher)).distinct() 
+        elif show_unknown:
+            if show_unknown == 'true':      
+                places = places.filter(Q(epoch_id=unknown_id)).distinct()
             
         tombs_shown = places.all().count()
         hidden_tombs = all_tombs -  tombs_shown
@@ -108,8 +139,7 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
         
-        unknown_id = 4 # it's 4 for debugging
-        
+        unknown_id = DEBUG_UNKNOWN_ID
         
         if oldest_epoch and newest_epoch and show_unknown:
             lower = min(oldest_epoch, newest_epoch)
