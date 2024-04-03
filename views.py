@@ -108,10 +108,11 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
         
+        unknown_id = 4 # it's 4 for debugging
+        
         if oldest_epoch and newest_epoch:
             lower = min(oldest_epoch, newest_epoch)
             higher = max(oldest_epoch, newest_epoch)
-            unknown_id = 1 # it's 4 for debugging
             
             # this is quite specific to how the data is currently coded:
             # id = 1 : Unknown
