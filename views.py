@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 import json
 
-DEBUG_UNKNOWN_ID = 1  # it's 4 for debugging
+DEBUG_UNKNOWN_ID = 4  # it's 4 for debugging
 
 class PlaceGeoViewSet(GeoViewSet):
 
@@ -46,6 +46,8 @@ class TombsInfoViewSet(DynamicDepthViewSet):
         oldest_epoch = self.request.query_params.get('oldest_epoch')
         newest_epoch = self.request.query_params.get('newest_epoch')
         show_unknown = self.request.query_params.get('show_unknown')
+        minyear = self.request.query_params.get('minyear')
+        maxyear = self.request.query_params.get('maxyear')
 
         # Filtering places 
         all_tombs = models.Place.objects.all().count()
@@ -88,9 +90,23 @@ class TombsInfoViewSet(DynamicDepthViewSet):
             lower = min(oldest_epoch, newest_epoch)
             higher = max(oldest_epoch, newest_epoch)
             places = places.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher)).distinct() 
-        elif show_unknown:
+        # elif show_unknown:
+        #     if show_unknown == 'true':      
+        #         places = places.filter(Q(epoch_id=unknown_id)).distinct()
+        
+        if minyear and maxyear and show_unknown:
+            if show_unknown == 'true':
+                queryset_dated = places.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear))
+                queryset_unknown = places.filter(Q(epoch__id=unknown_id))
+                places = queryset_dated | queryset_unknown
+            else:
+                places = places.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear)).distinct()
+        elif minyear and maxyear:
+            places = places.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear)).distinct()
+            
+        if show_unknown and not minyear and not oldest_epoch:
             if show_unknown == 'true':      
-                places = places.filter(Q(epoch_id=unknown_id)).distinct()
+                places = places.filter(Q(epoch_id=unknown_id))
             
         tombs_shown = places.all().count()
         hidden_tombs = all_tombs -  tombs_shown
@@ -133,6 +149,8 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         oldest_epoch = self.request.query_params.get('oldest_epoch')
         newest_epoch = self.request.query_params.get('newest_epoch')
         show_unknown = self.request.query_params.get('show_unknown')
+        minyear = self.request.query_params.get('minyear')
+        maxyear = self.request.query_params.get('maxyear')
         
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
@@ -161,10 +179,20 @@ class PlaceCoordinatesViewSet(GeoViewSet):
             lower = min(oldest_epoch, newest_epoch)
             higher = max(oldest_epoch, newest_epoch)
             queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher)).distinct() 
-        elif show_unknown:
+        
+        if minyear and maxyear and show_unknown:
+            if show_unknown == 'true':
+                queryset_dated = queryset.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear))
+                queryset_unknown = queryset.filter(Q(epoch__id=unknown_id))
+                queryset = queryset_dated | queryset_unknown
+            else:
+                queryset = queryset.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear)).distinct()
+        elif minyear and maxyear:
+            queryset = queryset.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear)).distinct()
+            
+        if show_unknown and not minyear and not oldest_epoch:
             if show_unknown == 'true':      
                 queryset = queryset.filter(Q(epoch_id=unknown_id))
-
         
         return queryset
 

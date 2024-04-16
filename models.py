@@ -152,6 +152,8 @@ class Place(abstract.AbstractBaseModel):
     tags = models.ManyToManyField(Tag, blank=True, help_text=_("Tags attached to the tomb"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the tomb"))
     epoch = models.ForeignKey(Epoch, on_delete=models.SET_NULL, blank=True, null=True, help_text=_("Dating of the tomb"))
+    min_year = models.IntegerField(null=True, blank=True, default=625, help_text=_("Oldest assigned year (BC)"))
+    max_year = models.IntegerField(null=True, blank=True, default=400, help_text=_("Oldest assigned year (BC)"))
     default_image = models.ForeignKey("Image", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Default image showing on preview"))
     default_3DHop = models.ForeignKey("Object3DHop", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Default image showing on preview"))
     default_pointcloud = models.ForeignKey("ObjectPointCloud", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Default image showing on preview"))
