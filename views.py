@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 import json
 
-DEBUG_UNKNOWN_ID = 4  # it's 4 for debugging
+DEBUG_UNKNOWN_ID = 1  # it's 4 for debugging
 
 class PlaceGeoViewSet(GeoViewSet):
 
