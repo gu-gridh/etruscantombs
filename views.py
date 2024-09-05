@@ -151,6 +151,7 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         show_unknown = self.request.query_params.get('show_unknown')
         minyear = self.request.query_params.get('minyear')
         maxyear = self.request.query_params.get('maxyear')
+        dataset = self.request.query_params.get('dataset')
         
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()

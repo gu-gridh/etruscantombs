@@ -135,16 +135,19 @@ class Dataset(abstract.AbstractBaseModel):
     name = models.CharField(max_length=1024, blank=True, null=True, help_text=("Full name of the dataset"))
     short_name = models.CharField(max_length=64, blank=True, null=True, help_text=("Name of the dataset to use for filtering"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the dataset"))
+    contributors = models.ManyToManyField(Author, blank=True, default=None, help_text=_("People who contributed to the dataset"))
+    attached_document = models.ForeignKey("Document", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Document or publication relating the dataset"))
 
     def __str__(self) -> str:
         return self.short_name
+
 
 # Place
 class Place(abstract.AbstractBaseModel):
     
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Please enter the name of the tomb"))
     subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"), default = None)
-    # dataset = models.ManyToManyField(Dataset, blank)
+    dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=1, help_text=_("Datasets in which this tomb was reported."))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     necropolis = models.ForeignKey(Necropolis, null=True, blank=True, on_delete=models.SET_NULL)
     type = models.ForeignKey(TypeOfTomb, on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Type of the tomb"))
@@ -162,7 +165,8 @@ class Place(abstract.AbstractBaseModel):
         return self.name
 
     class Meta:
-        verbose_name = _("Place")
+        verbose_name = _("Tomb")
+        verbose_name_plural = _("Tombs")
         
     def list_all_pk(self):
         all_pk = []
