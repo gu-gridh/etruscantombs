@@ -49,6 +49,7 @@ class TombsInfoViewSet(DynamicDepthViewSet):
         minyear = self.request.query_params.get('minyear')
         maxyear = self.request.query_params.get('maxyear')
         dataset = self.request.query_params.get('dataset')
+        site = self.request.query_params.get('site')
 
         # Filtering places 
         all_tombs = models.Place.objects.all().count()
@@ -69,6 +70,9 @@ class TombsInfoViewSet(DynamicDepthViewSet):
 
         if necropolis:
             places = places.filter(necropolis__id=necropolis)
+            
+        if site:
+            places = places.filter(necropolis__site=site)
 
         if type_of_tomb:
             places = places.filter(type__id=type_of_tomb)
@@ -156,12 +160,15 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         show_unknown = self.request.query_params.get('show_unknown')
         minyear = self.request.query_params.get('minyear')
         maxyear = self.request.query_params.get('maxyear')
-        dataset = self.request.query_params.get('dataset')
+        site = self.request.query_params.get('site')
         
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
+            
+        if site:
+            queryset = queryset.filter(Q(necropolis__site=site)).distinct()
         
         unknown_id = DEBUG_UNKNOWN_ID
         
