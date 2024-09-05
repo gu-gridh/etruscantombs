@@ -93,11 +93,25 @@ class TypeOfObservation(abstract.AbstractTagModel):
     
     def __repr__(self) -> str:
         return str(self)
+
+
+class Site(abstract.AbstractTagModel):
+    
+    class Meta:
+        verbose_name = _("Site")
+        verbose_name_plural = _("Sites")
+
+    def __str__(self) -> str:
+        return self.text
+    
+    def __repr__(self) -> str:
+        return str(self)
     
 
 class Necropolis(abstract.AbstractTagModel):
     
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True, default=None)
+    site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Archaeological site in which the Necropolis is found"))
 
     class Meta:
         verbose_name = _("Necropolis")

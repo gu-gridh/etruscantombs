@@ -122,6 +122,7 @@ class AuthorAdmin(admin.ModelAdmin):
 class DatasetAdmin(admin.ModelAdmin):
     list_display = ['name', 'short_name']# [*get_fields(Author, exclude=['id'])]
     search_fields = ['name', 'short_name']
+    filter_horizontal = ['contributors']
 
 
 @admin.register(Object3DHop)
@@ -153,10 +154,16 @@ class ObservationAdmin(admin.ModelAdmin):
     search_fields = ['title', 'place__name', 'type']
 
 
+@admin.register(Site)
+class SiteAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
+
 @admin.register(Necropolis)
 class NecropolisAdmin(LeafletGeoAdmin, admin.ModelAdmin):
     display_raw = True
-    list_display = ['text', 'geometry']
+    list_display = ['text', 'site', 'geometry']
     search_fields = ['text']
     
     # overrides base setting of Leaflet Geo Widget
