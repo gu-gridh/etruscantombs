@@ -54,15 +54,15 @@ class TombsInfoViewSet(DynamicDepthViewSet):
         all_tombs = models.Place.objects.all().count()
         places = models.Place.objects.all()
         
+        if dataset:
+            places = places.filter(Q(dataset__id__exact=dataset))
+        
         if with_3D:
             places = places.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False))
         
         if with_plan:
             places = places.filter(Q(images__type_of_image__text__exact="floor plan") 
                                   |Q(images__type_of_image__text__exact="section"))
-        
-        if dataset:
-            places = places.filter(Q(dataset__id__exact=dataset))
         
         if period:
             places = places.filter(epoch__id=period)           
