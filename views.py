@@ -48,6 +48,7 @@ class TombsInfoViewSet(DynamicDepthViewSet):
         show_unknown = self.request.query_params.get('show_unknown')
         minyear = self.request.query_params.get('minyear')
         maxyear = self.request.query_params.get('maxyear')
+        dataset = self.request.query_params.get('dataset')
 
         # Filtering places 
         all_tombs = models.Place.objects.all().count()
@@ -59,6 +60,10 @@ class TombsInfoViewSet(DynamicDepthViewSet):
         if with_plan:
             places = places.filter(Q(images__type_of_image__text__exact="floor plan") 
                                   |Q(images__type_of_image__text__exact="section"))
+        
+        if dataset:
+            places = places.filter(Q(dataset__id__exact=dataset))
+        
         if period:
             places = places.filter(epoch__id=period)           
 
