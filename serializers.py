@@ -128,3 +128,10 @@ class NecropolisSerializer(DynamicDepthSerializer):
     class Meta:
         model = Necropolis
         fields = get_fields(Necropolis, exclude=DEFAULT_FIELDS)+ ['id']
+        
+
+class SiteSerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = Site
+        fields = get_fields(Site, exclude=DEFAULT_FIELDS)+ ['id']
