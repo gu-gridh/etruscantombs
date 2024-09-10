@@ -30,7 +30,7 @@ class PlaceAdmin(LeafletGeoAdmin, admin.ModelAdmin):
     display_raw = True
     list_display = ['name', 'subtitle', 'type', 'geometry', 'necropolis'] # 'parent_id'
     search_fields = ['name']
-    filter_horizontal = ['tags']
+    filter_horizontal = ['clone_tombs', 'tags']
     form = PlaceForm
 
     # overrides base setting of Leaflet Geo Widget
