@@ -22,11 +22,15 @@ class PlaceGeoViewSet(GeoViewSet):
         queryset = models.Place.objects.all().order_by('id')
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
+        site = self.request.query_params.get('site')
         
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
+        if site:
+            queryset = queryset.filter(Q(necropolis__site=site)).distinct()
+            
         
         return queryset
         
