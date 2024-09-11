@@ -23,6 +23,10 @@ class PlaceGeoViewSet(GeoViewSet):
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
         site = self.request.query_params.get('site')
+        show_unknown = self.request.query_params.get('show_unknown')
+        unknown_id = 4
+        minyear = self.request.query_params.get('minyear')
+        maxyear = self.request.query_params.get('maxyear')
         
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
@@ -31,6 +35,19 @@ class PlaceGeoViewSet(GeoViewSet):
         if site:
             queryset = queryset.filter(Q(necropolis__site=site)).distinct()
             
+        if minyear and maxyear and show_unknown:
+            if show_unknown == 'true':
+                queryset_dated = queryset.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear))
+                queryset_unknown = queryset.filter(Q(epoch__id=unknown_id))
+                queryset = queryset_dated | queryset_unknown
+            else:
+                queryset = queryset.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear)).distinct()
+        elif minyear and maxyear:
+            queryset = queryset.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear)).distinct()
+            
+        if show_unknown and not minyear and not maxyear:
+            if show_unknown == 'true':      
+                queryset = queryset.filter(Q(epoch_id=unknown_id))
         
         return queryset
         
