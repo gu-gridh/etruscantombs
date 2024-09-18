@@ -61,7 +61,7 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
 class PlaceCoordinatesSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = Place
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'dataset']
         geo_field = 'geometry'
         depth = 1
         
