@@ -232,7 +232,7 @@ class PlaceCoordinatesViewSet(GeoViewSet):
 
 
 class BoundingBoxView(GeoViewSet):
-    serializer_class = serializers.PlaceCoordinatesSerializer
+    # serializer_class = serializers.PlaceCoordinatesSerializer
     # serializer_class = serializers.PlaceSerializer
     # queryset = models.Place.objects.all().order_by('id')
     # filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
@@ -247,6 +247,9 @@ class BoundingBoxView(GeoViewSet):
         minyear = self.request.query_params.get('minyear')
         maxyear = self.request.query_params.get('maxyear')
         site = self.request.query_params.get('site')
+        necropolis = self.request.query_params.get('necropolis')
+        type_of_tomb = self.request.query_params.get('type')
+        dataset = self.request.query_params.get('dataset')
         
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
@@ -255,6 +258,15 @@ class BoundingBoxView(GeoViewSet):
             
         if site:
             queryset = queryset.filter(Q(necropolis__site=site)).distinct()
+            
+        if necropolis:
+            queryset = queryset.filter(Q(necropolis=necropolis))
+            
+        if type_of_tomb:
+            queryset = queryset.filter(Q(type=type_of_tomb))
+            
+        if dataset:
+            queryset = queryset.filter(Q(dataset=dataset))
         
         unknown_id = DEBUG_UNKNOWN_ID
         

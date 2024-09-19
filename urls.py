@@ -25,9 +25,9 @@ urlpatterns = [
 
     # Automatically generated views
     *utils.get_model_urls('etruscantombs', endpoint, 
-        exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis', 'site', 'datasets', 'coordinates']),
+        exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis', 'site', 'datasets', 'coordinates', 'boundingbox']),
 
     *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 
-                                                                   'necropolis', 'site', 'datasets', 'coordinates']),
+                                                                   'necropolis', 'site', 'datasets', 'coordinates', 'boundingbox']),
     *documentation
 ]
