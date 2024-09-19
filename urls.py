@@ -18,6 +18,7 @@ router.register(rf'{endpoint}/necropolis', views.NecropolisViewSet, basename='ne
 router.register(rf'{endpoint}/sites', views.SiteViewSet, basename='site')
 router.register(rf'{endpoint}/datasets', views.DatasetViewSet, basename='datasets')
 router.register(rf'{endpoint}/coordinates', views.PlaceCoordinatesViewSet, basename='coordinates')
+router.register(rf'{endpoint}/boundingbox', views.BoundingBoxView, basename='bounding box')
 
 urlpatterns = [
     path('', include(router.urls)),

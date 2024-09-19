@@ -231,6 +231,91 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         return queryset
 
 
+class BoundingBoxView(GeoViewSet):
+    serializer_class = serializers.PlaceCoordinatesSerializer
+    # serializer_class = serializers.PlaceSerializer
+    # queryset = models.Place.objects.all().order_by('id')
+    # filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry'])
+    
+    def list(self, request):
+        queryset = models.Place.objects.all().order_by('id')
+        with_3D = self.request.query_params.get('with_3D')
+        with_plan = self.request.query_params.get('with_plan')
+        oldest_epoch = self.request.query_params.get('oldest_epoch')
+        newest_epoch = self.request.query_params.get('newest_epoch')
+        show_unknown = self.request.query_params.get('show_unknown')
+        minyear = self.request.query_params.get('minyear')
+        maxyear = self.request.query_params.get('maxyear')
+        site = self.request.query_params.get('site')
+        
+        if with_3D:
+            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
+        if with_plan:
+            queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
+            
+        if site:
+            queryset = queryset.filter(Q(necropolis__site=site)).distinct()
+        
+        unknown_id = DEBUG_UNKNOWN_ID
+        
+        if oldest_epoch and newest_epoch and show_unknown:
+            lower = min(oldest_epoch, newest_epoch)
+            higher = max(oldest_epoch, newest_epoch)
+            
+            # this is quite specific to how the data is currently coded:
+            # id = 1 : Unknown
+            # id = 5 : 700-650 BC
+            # id = 6 : 625-400 BC
+            # id = 7 : 400-200 BC
+            
+            # thus if looking for oldest = 5 and newest = 7, it should return all numbers >= 5 and <= 7
+
+            if show_unknown == 'true':
+                queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher) | Q(epoch_id=unknown_id)).distinct()
+            else:
+                queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher)).distinct()
+        elif oldest_epoch and newest_epoch:
+            lower = min(oldest_epoch, newest_epoch)
+            higher = max(oldest_epoch, newest_epoch)
+            queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher)).distinct() 
+        
+        if minyear and maxyear and show_unknown:
+            if show_unknown == 'true':
+                queryset_dated = queryset.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear))
+                queryset_unknown = queryset.filter(Q(epoch__id=unknown_id))
+                queryset = queryset_dated | queryset_unknown
+            else:
+                queryset = queryset.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear)).distinct()
+        elif minyear and maxyear:
+            queryset = queryset.filter(Q(min_year__lte=minyear) & Q(max_year__gte=maxyear)).distinct()
+            
+        if show_unknown and not minyear and not oldest_epoch:
+            if show_unknown == 'true':      
+                queryset = queryset.filter(Q(epoch_id=unknown_id))
+        
+        bounding_box = {
+            "min_latitude": None,
+            "min_longitude": None,
+            "max_latitude": None,
+            "max_longitude": None
+        }
+        
+        all_lat = []
+        all_lon = []
+        for tomb in queryset:
+            lon, lat = tomb.geometry.coords
+            all_lat.append(lat)
+            all_lon.append(lon)
+            
+        bounding_box["min_latitude"] = min(all_lat)
+        bounding_box["min_longitude"] = min(all_lon)
+        bounding_box["max_latitude"] = max(all_lat)
+        bounding_box["max_longitude"] = max(all_lon)
+            
+        return HttpResponse(json.dumps(bounding_box))
+
+
+
 class IIIFImageViewSet(DynamicDepthViewSet):
     """
     retrieve:

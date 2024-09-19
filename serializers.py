@@ -59,6 +59,7 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
         return object_to_display
 
 class PlaceCoordinatesSerializer(GeoFeatureModelSerializer):
+        
     class Meta:
         model = Place
         fields = ['id', 'name', 'dataset']
