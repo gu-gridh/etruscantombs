@@ -318,11 +318,12 @@ class BoundingBoxView(GeoViewSet):
             lon, lat = tomb.geometry.coords
             all_lat.append(lat)
             all_lon.append(lon)
-            
-        bounding_box["min_latitude"] = min(all_lat)
-        bounding_box["min_longitude"] = min(all_lon)
-        bounding_box["max_latitude"] = max(all_lat)
-        bounding_box["max_longitude"] = max(all_lon)
+        
+        if len(all_lat) > 0 and len(all_lon) > 0:
+            bounding_box["min_latitude"] = min(all_lat)
+            bounding_box["min_longitude"] = min(all_lon)
+            bounding_box["max_latitude"] = max(all_lat)
+            bounding_box["max_longitude"] = max(all_lon)
             
         return HttpResponse(json.dumps(bounding_box))
 
