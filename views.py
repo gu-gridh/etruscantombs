@@ -13,11 +13,28 @@ class PlaceGeoViewSet(GeoViewSet):
 
     # queryset = models.Place.objects.all().order_by('id')
     serializer_class = serializers.PlaceGeoSerializer
+
+    def get_serializer(self, *args, **kwargs):
+        # Get depth parameter from the URL query parameters (e.g., ?depth=3)
+        depth = self.request.query_params.get('depth', None)
+
+        if depth is not None:
+            try:
+                depth = int(depth)  # Convert to integer
+            except ValueError:
+                depth = None  # If depth is invalid, we don't apply any depth
+
+        # Pass the depth to the serializer if it's provided
+        if depth:
+            kwargs['depth'] = depth
+
+        return super(PlaceGeoViewSet, self).get_serializer(*args, **kwargs)
+
     filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry', 'threedhop_count', 'pointcloud_count'])
     search_fields = ['placename'] # this does nothing!!
     bbox_filter_field = 'geometry'
     bbox_filter_include_overlapping = True
-    
+
     def get_queryset(self):
         queryset = models.Place.objects.all().order_by('id')
         with_3D = self.request.query_params.get('with_3D')

@@ -19,45 +19,6 @@ class TIFFImageSerializer(DynamicDepthSerializer):
         model = Image
         fields = get_fields(Image, exclude=DEFAULT_FIELDS)+ ['id']
         
-    
-class PlaceGeoSerializer(GeoFeatureModelSerializer):
-
-    # images = TIFFImageSerializer(many=True)
-    photographs_count = SerializerMethodField()
-    plans_count = SerializerMethodField()
-    threedhop_count = SerializerMethodField()
-    pointcloud_count = SerializerMethodField()
-    first_photograph_id = SerializerMethodField()
-    
-    class Meta:
-        model = Place
-        fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id', 'photographs_count', 'plans_count', 'threedhop_count', 'pointcloud_count', 'first_photograph_id']
-        geo_field = 'geometry'
-        depth = 3
-            
-    def get_photographs_count(self, obj):
-        return obj.images.filter(type_of_image__text="photograph").count()
-        
-    def get_plans_count(self, obj):
-        floor_plans = obj.images.filter(type_of_image__text="floor plan").count()
-        section_plans = obj.images.filter(type_of_image__text="section").count()
-        return floor_plans + section_plans
-    
-    def get_threedhop_count(self, obj):
-        return obj.object_3Dhop.count()
-    
-    def get_pointcloud_count(self, obj):
-        return obj.object_pointcloud.count()
-    
-    def get_first_photograph_id(self, obj):
-        
-        try: 
-            object_to_display = obj.images.filter(type_of_image__text="photograph").filter(published=True).values()[0]
-        except:
-            object_to_display = []
-        
-        return object_to_display
-
 class PlaceCoordinatesSerializer(GeoFeatureModelSerializer):
         
     class Meta:
@@ -124,15 +85,81 @@ class ObservationSerializer(DynamicDepthSerializer):
         fields = get_fields(Observation, exclude=DEFAULT_FIELDS)+ ['id']
         
         
-class NecropolisSerializer(DynamicDepthSerializer):
-
-    class Meta:
-        model = Necropolis
-        fields = get_fields(Necropolis, exclude=DEFAULT_FIELDS)+ ['id']
-        
 
 class SiteSerializer(DynamicDepthSerializer):
 
     class Meta:
         model = Site
         fields = get_fields(Site, exclude=DEFAULT_FIELDS)+ ['id']
+
+class NecropolisSerializer(DynamicDepthSerializer):
+    class Meta:
+        model = Necropolis
+        fields = get_fields(Necropolis, exclude=DEFAULT_FIELDS)+ ['id']
+
+class TagSerializer(DynamicDepthSerializer):
+    
+    class Meta:
+        model = Tag
+        fields = ['id'] + get_fields(Tag, exclude=DEFAULT_FIELDS)
+
+class PlaceGeoSerializer(GeoFeatureModelSerializer):
+
+    # images = TIFFImageSerializer(many=True)
+    photographs_count = SerializerMethodField()
+    plans_count = SerializerMethodField()
+    threedhop_count = SerializerMethodField()
+    pointcloud_count = SerializerMethodField()
+    first_photograph_id = SerializerMethodField()
+
+    # class Meta:
+    #     model = Place
+    #     fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id', 'photographs_count', 'plans_count', 'threedhop_count', 'pointcloud_count', 'first_photograph_id']
+    #     geo_field = 'geometry'
+    #     # depth = 1
+
+
+    def __init__(self, *args, **kwargs):
+        # Accept 'depth' from the view context or leave it unset (no depth)
+        depth = kwargs.pop('depth', None)
+        super(PlaceGeoSerializer, self).__init__(*args, **kwargs)
+
+        # Dynamically set the depth only if it is provided
+        if depth is not None:
+            self.Meta.depth = depth
+        else:
+            # If no depth is provided, remove it so there's no depth by default
+            if hasattr(self.Meta, 'depth'):
+                del self.Meta.depth
+
+    class Meta:
+        model = Place
+        fields = get_fields(Place, exclude=DEFAULT_FIELDS) + [
+            'id', 'photographs_count', 'plans_count', 'threedhop_count',
+            'pointcloud_count', 'first_photograph_id'
+        ]
+        geo_field = 'geometry'
+        # No default depth here, we want to start with no depth
+            
+    def get_photographs_count(self, obj):
+        return obj.images.filter(type_of_image__text="photograph").count()
+        
+    def get_plans_count(self, obj):
+        floor_plans = obj.images.filter(type_of_image__text="floor plan").count()
+        section_plans = obj.images.filter(type_of_image__text="section").count()
+        return floor_plans + section_plans
+    
+    def get_threedhop_count(self, obj):
+        return obj.object_3Dhop.count()
+    
+    def get_pointcloud_count(self, obj):
+        return obj.object_pointcloud.count()
+    
+    def get_first_photograph_id(self, obj):
+        
+        try: 
+            object_to_display = obj.images.filter(type_of_image__text="photograph").filter(published=True).values()[0]
+        except:
+            object_to_display = []
+        
+        return object_to_display
