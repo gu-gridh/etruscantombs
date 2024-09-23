@@ -33,7 +33,7 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
         model = Place
         fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id', 'photographs_count', 'plans_count', 'threedhop_count', 'pointcloud_count', 'first_photograph_id']
         geo_field = 'geometry'
-        depth = 1
+        depth = 3
             
     def get_photographs_count(self, obj):
         return obj.images.filter(type_of_image__text="photograph").count()
