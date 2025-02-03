@@ -20,12 +20,20 @@ class TIFFImageSerializer(DynamicDepthSerializer):
         fields = get_fields(Image, exclude=DEFAULT_FIELDS)+ ['id']
         
 class PlaceCoordinatesSerializer(GeoFeatureModelSerializer):
-        
+    
+    has_3D = SerializerMethodField()
+
     class Meta:
         model = Place
-        fields = ['id', 'name', 'dataset']
+        fields = ['id', 'name', 'dataset', 'has_3D']
         geo_field = 'geometry'
         depth = 1
+
+    def get_has_3D(self, obj):
+        if obj.object_pointcloud.count() > 0 or obj.object_3Dhop.count() > 0:
+            return True
+        else:
+            return False
         
 
 class LayerSerializer(DynamicDepthSerializer):
@@ -111,13 +119,6 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
     threedhop_count = SerializerMethodField()
     pointcloud_count = SerializerMethodField()
     first_photograph_id = SerializerMethodField()
-
-    # class Meta:
-    #     model = Place
-    #     fields = get_fields(Place, exclude=DEFAULT_FIELDS)+ ['id', 'photographs_count', 'plans_count', 'threedhop_count', 'pointcloud_count', 'first_photograph_id']
-    #     geo_field = 'geometry'
-    #     # depth = 1
-
 
     def __init__(self, *args, **kwargs):
         # Accept 'depth' from the view context or leave it unset (no depth)

@@ -153,7 +153,7 @@ class Dataset(abstract.AbstractBaseModel):
     attached_document = models.ForeignKey("Document", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Document or publication relating the dataset"))
 
     def __str__(self) -> str:
-        return self.short_name
+        return self.name
 
 
 # Place
