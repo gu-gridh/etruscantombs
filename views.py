@@ -41,7 +41,7 @@ class PlaceGeoViewSet(GeoViewSet):
         with_plan = self.request.query_params.get('with_plan')
         site = self.request.query_params.get('site')
         show_unknown = self.request.query_params.get('show_unknown')
-        unknown_id = 4
+        unknown_id = DEBUG_UNKNOWN_ID
         minyear = self.request.query_params.get('minyear')
         maxyear = self.request.query_params.get('maxyear')
         
