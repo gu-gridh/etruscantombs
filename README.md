@@ -27,4 +27,4 @@ https://diana.dh.gu.se/api/etruscantombs/geojson/place/
 
 ## Datasets
 ### CTSG-2015 - Chamber Tombs of San Giovenale
-This datset is derived from the thesis The Chamber Tombs of San Giovenale and the Funerary Landscapes of South Etruria (2015) by Fredrik Tobin-Dodd.
+This dataset is derived from the thesis The Chamber Tombs of San Giovenale and the Funerary Landscapes of South Etruria (2015) by Fredrik Tobin-Dodd.
