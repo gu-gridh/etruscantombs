@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 import json
 
-DEBUG_UNKNOWN_ID = 1  # it's 4 for debugging
+DEBUG_UNKNOWN_ID = 1  # sets correct IDs for epochs
 
 class PlaceGeoViewSet(GeoViewSet):
 
@@ -214,14 +214,12 @@ class PlaceCoordinatesViewSet(GeoViewSet):
             lower = min(oldest_epoch, newest_epoch)
             higher = max(oldest_epoch, newest_epoch)
             
-            # this is quite specific to how the data is currently coded:
+            # this is quite specific to how the data is currently saved in the database:
             # id = 1 : Unknown
             # id = 5 : 700-650 BC
             # id = 6 : 625-400 BC
             # id = 7 : 400-200 BC
             
-            # thus if looking for oldest = 5 and newest = 7, it should return all numbers >= 5 and <= 7
-
             if show_unknown == 'true':
                 queryset = queryset.filter(Q(epoch__id__gte=lower) & Q(epoch__id__lte=higher) | Q(epoch_id=unknown_id)).distinct()
             else:
