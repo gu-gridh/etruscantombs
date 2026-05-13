@@ -171,5 +171,5 @@ class NecropolisAdmin(LeafletGeoAdmin, admin.ModelAdmin):
 
 @admin.register(Technique3D)
 class Technique3DAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Technique3D, exclude=['id'])]
-    search_fields = ['title', 'place__name', 'type']
+    list_display = ['text']#[*get_fields(Technique3D, exclude=['id'])]
+    search_fields = ['text'] # ['title', 'place__name', 'type']
