@@ -64,6 +64,13 @@ class ObjectPointCloudSerializer(DynamicDepthSerializer):
         fields = get_fields(ObjectPointCloud, exclude=DEFAULT_FIELDS)+ ['id']
 
 
+class Object3jsSerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = Object3js
+        fields = get_fields(Object3js, exclude=DEFAULT_FIELDS)+ ['id']
+
+
 class DocumentSerializer(DynamicDepthSerializer):
     type_names = SerializerMethodField()
     

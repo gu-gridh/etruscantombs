@@ -121,15 +121,23 @@ class DatasetAdmin(admin.ModelAdmin):
 
 @admin.register(Object3DHop)
 class Object3DHopAdmin(admin.ModelAdmin):
-    list_display = ['title', 'scaled', 'preview_image'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
-    search_fields = ['title', 'place__name', 'type']
+    list_display = ['title', 'url_public', 'technique', 'scaled'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
+    search_fields = ['title', 'tomb__name', 'type']
     autocomplete_fields = ['preview_image']
     filter_horizontal = ['tomb']
 
 
 @admin.register(ObjectPointCloud)
 class ObjectPointCloudAdmin(admin.ModelAdmin):
-    list_display = ['title', 'scaled', 'preview_image'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
+    list_display = ['title', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
+    search_fields = ['title', 'place__name', 'type']
+    autocomplete_fields = ['preview_image']
+    filter_horizontal = ['tomb']
+
+
+@admin.register(Object3js)
+class Object3jsAdmin(admin.ModelAdmin):
+    list_display = ['title', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
     autocomplete_fields = ['preview_image']
     filter_horizontal = ['tomb']
