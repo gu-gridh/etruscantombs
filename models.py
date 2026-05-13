@@ -240,15 +240,6 @@ class Image(abstract.AbstractTIFFImageModel):
             return Image.objects.get(pk=all_pk[current_index-1])
         except:
             return None
-    
-
-class Layer(abstract.AbstractBaseModel):
-    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
-    author = models.ForeignKey(Author, on_delete=models.SET_NULL, blank=True, null=True)
-    url = models.URLField(blank=True, null=True)
-    type = models.CharField(max_length=32, null=True, blank=True)
-    format = models.CharField(max_length=32, null=True, blank=True, help_text=_("Type of the image can be jpeg, png, etc."))
-    description = RichTextField(null=True, blank=True, verbose_name=_("description"))
 
 
 class Object3DHop(abstract.AbstractBaseModel):

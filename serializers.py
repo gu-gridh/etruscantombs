@@ -34,13 +34,6 @@ class PlaceCoordinatesSerializer(GeoFeatureModelSerializer):
             return True
         else:
             return False
-        
-
-class LayerSerializer(DynamicDepthSerializer):
-
-    class Meta:
-        model = Layer
-        fields = get_fields(Layer, exclude=DEFAULT_FIELDS)+ ['id']
 
 
 class AuthorSerializer(DynamicDepthSerializer):

@@ -361,13 +361,6 @@ class IIIFImageViewSet(DynamicDepthViewSet):
     filterset_fields = get_fields(models.Image, exclude=DEFAULT_FIELDS + ['iiif_file', 'file'])
 
 
-class LayerViewSet(DynamicDepthViewSet):
-    
-    queryset = models.Layer.objects.all()
-    serializer_class = serializers.LayerSerializer
-    filterset_fields = get_fields(models.Layer, exclude=DEFAULT_FIELDS)
-
-
 class Object3DHopViewSet(DynamicDepthViewSet):
     
     queryset = models.Object3DHop.objects.all()

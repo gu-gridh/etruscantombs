@@ -106,12 +106,6 @@ class ImageModel(admin.ModelAdmin):
     change_form_template = 'apps/etruscantombs/image_change_form.html'
 
 
-@admin.register(Layer)
-class LayerAdmin(admin.ModelAdmin):
-    list_display = [*get_fields(Layer, exclude=['id'])]
-    search_fields = ['title']
-
-
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ['lastname', 'firstname']# [*get_fields(Author, exclude=['id'])]
