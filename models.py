@@ -242,6 +242,9 @@ class Image(abstract.AbstractTIFFImageModel):
         except:
             return None
 
+class Formats3D(models.IntegerChoices):
+    GLB = 1, "GLB"
+    USDZ = 2, "USDZ"
 
 class Object3DHop(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
@@ -251,6 +254,7 @@ class Object3DHop(abstract.AbstractBaseModel):
     dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=1, help_text=_("Datasets in which this tomb was reported."))
     url_public = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for API call"))
     url_download = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for download"))
+    url_source = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for source files"))
     triangles_optimized = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Triangles (optimized)"), help_text=_("number of triangles of the optimized mesh, e.g.: 250 millions"))
     triangles_full_resolution = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Triangles (full resolution)"), help_text=_("number of triangles of the full resolution mesh, e.g.: 1.3 billions"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
@@ -287,6 +291,7 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
     dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=1, help_text=_("Datasets in which this tomb was reported."))
     url_public = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for API call"))
     url_download = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for download"))
+    url_source = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for source files"))
     points_optimized = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Points (optimized)"), help_text=_("number of points of the optimized models, e.g.: 250 millions"))
     points_full_resolution = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Points (full resolution)"),  help_text=_("number of points of the full resolution model, e.g.: 1.3 billions"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
@@ -315,6 +320,9 @@ class Object3js(abstract.AbstractBaseModel):
     dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=0, help_text=_("Datasets in which this tomb was reported."))
     url_public = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for API call"))
     url_download = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for download"))
+    url_source = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for source files"))
+    format_3d = models.IntegerField(choices=Formats3D.choices, default=1, verbose_name=_("3D Format"))
+    
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
     date = models.DateField(default=date.today, help_text=_("Date in which the 3D object was created"))
     technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.SET_NULL, help_text=_("Technique used to generate the 3D model"))

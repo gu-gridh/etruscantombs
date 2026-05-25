@@ -121,27 +121,34 @@ class DatasetAdmin(admin.ModelAdmin):
 
 @admin.register(Object3DHop)
 class Object3DHopAdmin(admin.ModelAdmin):
-    list_display = ['title', 'url_public', 'technique', 'scaled'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
-    search_fields = ['title', 'tomb__name', 'type']
-    #autocomplete_fields = ['preview_image']
+    list_display = ['get_tombs', 'url_public', 'technique', 'scaled'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
+    search_fields = ['title', 'type']
     filter_horizontal = ['tomb', 'author']
+
+    def get_tombs(self, obj):
+        return ", ".join([tomb.name for tomb in obj.tomb.all()])
+    get_tombs.short_description = 'Tombs'
 
 
 @admin.register(ObjectPointCloud)
 class ObjectPointCloudAdmin(admin.ModelAdmin):
-    list_display = ['title', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
+    list_display = ['get_tombs', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
-    #autocomplete_fields = ['preview_image']
     filter_horizontal = ['tomb', 'author']
 
+    def get_tombs(self, obj):
+        return ", ".join([tomb.name for tomb in obj.tomb.all()])
+    get_tombs.short_description = 'Tombs'
 
 @admin.register(Object3js)
 class Object3jsAdmin(admin.ModelAdmin):
-    list_display = ['title', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
+    list_display = ['get_tombs', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
     search_fields = ['title', 'place__name', 'type']
-    #autocomplete_fields = ['preview_image']
     filter_horizontal = ['tomb', 'author']
 
+    def get_tombs(self, obj):
+        return ", ".join([tomb.name for tomb in obj.tomb.all()])
+    get_tombs.short_description = 'Tombs'
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
