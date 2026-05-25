@@ -89,7 +89,7 @@ class PlaceFilter(AutocompleteFilter):
 class ImageModel(admin.ModelAdmin):
 
     fields              = ['image_preview', *get_fields(Image, exclude=['id'])]
-    readonly_fields     = ['iiif_file', 'uuid', 'image_preview', *DEFAULT_FIELDS]
+    readonly_fields     = ['iiif_file', 'uuid', 'width', 'height', 'image_preview', *DEFAULT_FIELDS]
     autocomplete_fields = ['tomb', 'author']
     list_display        = ['thumbnail_preview', 'title', 'tomb', 'file', 'author']
     search_fields       = ['title', 'tomb__name', 'file']

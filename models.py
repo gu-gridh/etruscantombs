@@ -216,6 +216,10 @@ class Image(abstract.AbstractTIFFImageModel):
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the images"))
     date = models.DateField(default=date.today, help_text=_("Date in which the image was taken"))
 
+    # Image metadata
+    width = models.IntegerField(null=True, blank=True, verbose_name=_("width (px)"))
+    height = models.IntegerField(null=True, blank=True, verbose_name=_("height (px)"))
+
     def __str__(self) -> str:
         return f"{self.title}"
     
