@@ -153,7 +153,7 @@ class Dataset(abstract.AbstractBaseModel):
     short_name = models.CharField(max_length=64, blank=True, null=True, help_text=("Name of the dataset to use for filtering"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the dataset"))
     contributors = models.ManyToManyField(Author, blank=True, default=None, help_text=_("People who contributed to the dataset"))
-    attached_document = models.ForeignKey("Document", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Document or publication relating the dataset"))
+    # attached_document = models.ForeignKey("Document", on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Document or publication relating the dataset"))
 
     def __str__(self) -> str:
         return self.name
@@ -320,6 +320,7 @@ class Object3js(abstract.AbstractBaseModel):
     date = models.DateField(default=date.today, help_text=_("Date in which the 3D object was created"))
     technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.SET_NULL, help_text=_("Technique used to generate the 3D model"))
     scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
+    polygons = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Polygons"), help_text=_("number of triangles of the optimized mesh, e.g.: 5 millions"))
     camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))# models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
@@ -336,11 +337,13 @@ class Document(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
     place = models.ManyToManyField(Place, blank=True, related_name="documentation")
+    dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=0, help_text=_("Datasets in which this tomb was reported."))
     upload = models.FileField(null=True, blank=True, storage=OriginalFileStorage, upload_to=get_original_path, verbose_name=_("file"), validators=[validate_file_extension])
     type = models.ManyToManyField(TypeOfDocument, blank=True, verbose_name=_("Type of document: Report, Thesis, etc"))
     size = models.FloatField(null=True, blank=True, help_text=_("Document size in mb"), default=None)
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the document"))
     date = models.DateField(default=date.today, help_text=_("Date in which the document was created"))
+
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -353,6 +356,7 @@ class Observation(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
     place = models.ForeignKey(Place, null=True, blank=True, on_delete=models.CASCADE, related_name="observation")
+    dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=0, help_text=_("Datasets in which this tomb was reported."))
     observation = RichTextField(null=True, blank=True, help_text=("Write observation here"))
     type = models.ManyToManyField(TypeOfObservation, blank=True, verbose_name=_("Type of the observation: Survey, Damage report, etc"))
     date = models.DateField(default=date.today, help_text=_("Date in which the document was created"))
