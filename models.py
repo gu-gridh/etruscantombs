@@ -1,17 +1,16 @@
 # from django.db import models
 from django.contrib.gis.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator 
 import diana.abstract.models as abstract
 from django.utils.translation import gettext_lazy as _
-from diana.storages import OriginalFileStorage
-from diana.abstract.models import get_original_path
+from diana.storages import OriginalFileStorage, IIIFFileStorage
+from diana.abstract.models import get_original_path, get_iiif_path
 from ckeditor.fields import RichTextField
 from markdownfield.models import MarkdownField, RenderedMarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 from datetime import date
 from .validators import validate_file_extension, validate_image_extension
 
-from diana.storages import IIIFFileStorage
-from diana.abstract.models import get_iiif_path
 # Create your models here.
 
 from django.contrib.postgres.fields import ArrayField
@@ -323,6 +322,7 @@ class Object3js(abstract.AbstractBaseModel):
     polygons = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Polygons"), help_text=_("number of triangles of the optimized mesh, e.g.: 5 millions"))
     camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
+    movement_speed = models.PositiveIntegerField(default=3, validators=[MinValueValidator(1), MaxValueValidator(10)])
     preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))# models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:
