@@ -249,7 +249,6 @@ class Object3DHop(abstract.AbstractBaseModel):
     dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=1, help_text=_("Datasets in which this tomb was reported."))
     url_public = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for API call"))
     url_download = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for download"))
-    # url_full_resolution = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL of full resolution model"))
     triangles_optimized = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Triangles (optimized)"), help_text=_("number of triangles of the optimized mesh, e.g.: 250 millions"))
     triangles_full_resolution = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Triangles (full resolution)"), help_text=_("number of triangles of the full resolution mesh, e.g.: 1.3 billions"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
@@ -285,7 +284,6 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
     dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=1, help_text=_("Datasets in which this tomb was reported."))
     url_public = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for API call"))
     url_download = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for download"))
-    #url_full_resolution = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL of full resolution model"))
     points_optimized = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Points (optimized)"), help_text=_("number of points of the optimized models, e.g.: 250 millions"))
     points_full_resolution = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Points (full resolution)"),  help_text=_("number of points of the full resolution model, e.g.: 1.3 billions"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
@@ -314,16 +312,12 @@ class Object3js(abstract.AbstractBaseModel):
     dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=0, help_text=_("Datasets in which this tomb was reported."))
     url_public = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for API call"))
     url_download = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for download"))
-    
-    #points_optimized = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Points (optimized)"), help_text=_("number of points of the optimized models, e.g.: 250 millions"))
-    #points_full_resolution = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Points (full resolution)"),  help_text=_("number of points of the full resolution model, e.g.: 1.3 billions"))
     description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the 3D object"))
     date = models.DateField(default=date.today, help_text=_("Date in which the 3D object was created"))
     technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.SET_NULL, help_text=_("Technique used to generate the 3D model"))
     scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
     camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
-
     preview_image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:
