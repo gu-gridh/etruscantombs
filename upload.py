@@ -18,7 +18,32 @@ django.setup()
 
 from apps.etruscantombs.models import Author, Image, Place, TypeOfImage
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from django.db import models, transaction
+
+CONNECT_TIMEOUT = float(os.getenv("IIIF_CONNECT_TIMEOUT", "5"))
+READ_TIMEOUT = float(os.getenv("IIIF_READ_TIMEOUT", "20"))
+MAX_RETRIES = int(os.getenv("IIIF_MAX_RETRIES", "3"))
+
+
+def _build_http_session():
+    retry = Retry(
+        total=MAX_RETRIES,
+        connect=MAX_RETRIES,
+        read=MAX_RETRIES,
+        backoff_factor=1.0,
+        status_forcelist=(429, 500, 502, 503, 504),
+        allowed_methods=frozenset(["GET"]),
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session = requests.Session()
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
+HTTP_SESSION = _build_http_session()
 
 # local_folder = sys.args[1]
 # if len(sys.args) == 1:
@@ -99,18 +124,18 @@ def batch_upload(folder):
 def update_image_metadata(sender, instance, **kwargs):
     """Fetch and update image dimensions from IIIF info.json if not set."""
     if instance is None:
-        return
+        return False
     
     if (instance.width is None or instance.height is None) and instance.iiif_file:
         base_url = "https://img.dh.gu.se/diana/static/"
         iiif_file_url = getattr(instance.iiif_file, 'url', None)
         if not iiif_file_url:
-            return
+            return False
         if not iiif_file_url.startswith("http"):
             iiif_file_url = base_url + iiif_file_url.lstrip("/")
         info_url = f"{iiif_file_url}/info.json"
         try:
-            response = requests.get(info_url, timeout=5)
+            response = HTTP_SESSION.get(info_url, timeout=(CONNECT_TIMEOUT, READ_TIMEOUT))
             if response.status_code == 200:
                 info = response.json()
                 width = info.get("width")
@@ -123,9 +148,17 @@ def update_image_metadata(sender, instance, **kwargs):
                         Image.objects.filter(pk=instance.pk).update(width=width, height=height)
                     
                     transaction.on_commit(update_dimensions)
+                    return True
+            return False
+        except requests.exceptions.Timeout as e:
+            print(f"Timeout fetching IIIF info for image {instance.id}: {e}")
+            return False
         except Exception as e:
             # Optionally log the error
             print(f"Could not fetch IIIF info for image {instance.id}: {e}")
+            return False
+
+    return False
 
 
 def backfill_image_metadata():
@@ -133,9 +166,16 @@ def backfill_image_metadata():
     total = images.count()
     print(f"Checking {total} images for missing metadata")
 
-    for image in images.iterator():
-        update_image_metadata(None, image)
+    updated = 0
+    failed = 0
 
+    for image in images.iterator():
+        if update_image_metadata(None, image):
+            updated += 1
+        else:
+            failed += 1
+
+    print(f"Updated: {updated} | Not updated: {failed}")
     print("Metadata backfill run completed")
 
 if __name__ == "__main__":
