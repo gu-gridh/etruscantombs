@@ -9,6 +9,9 @@ from markdownfield.models import MarkdownField, RenderedMarkdownField
 from markdownfield.validators import VALIDATOR_STANDARD
 from datetime import date
 from .validators import validate_file_extension, validate_image_extension
+
+from diana.storages import IIIFFileStorage
+from diana.abstract.models import get_iiif_path
 # Create your models here.
 
 from django.contrib.postgres.fields import ArrayField
@@ -263,15 +266,16 @@ class Object3DHop(abstract.AbstractBaseModel):
     min_max_phi = ArrayField(models.FloatField(), size=2, default=get_min_max_default, verbose_name=_("maximal vertical camera angles"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
     min_max_theta = ArrayField(models.FloatField(), size=2, default=get_min_max_default, verbose_name=_("maximal horizontal camera angles"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
 
-    preview_image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
+    preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))
+# models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
 
     def __str__(self) -> str:
         return f"{self.title}"
     
     class Meta:
-        verbose_name = _("Object Mesh")
-        verbose_name_plural = _("Objects Mesh")
+        verbose_name = _("Object Detailed Mesh")
+        verbose_name_plural = _("Objects Detailed Mesh")
 
     # TODO: add default naming conventions to forms (auto-generated links)
 
@@ -294,7 +298,7 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
     camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
 
-    preview_image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
+    preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -318,14 +322,14 @@ class Object3js(abstract.AbstractBaseModel):
     scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
     camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
-    preview_image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
+    preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))# models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.title}"
     
     class Meta:
-        verbose_name = _("Object 3js")
-        verbose_name_plural = _("Objects 3js")
+        verbose_name = _("Object Textured")
+        verbose_name_plural = _("Objects Textured Mesh")
 
 
 class Document(abstract.AbstractBaseModel):
