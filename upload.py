@@ -1,6 +1,24 @@
 import os
-from django.core.files import File
-from .models import *
+import sys
+
+# Running this file directly from the app folder puts that folder first on sys.path,
+# which shadows the stdlib signal module with local signal.py during Django imports.
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, "..", ".."))
+if CURRENT_DIR in sys.path:
+    sys.path.remove(CURRENT_DIR)
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "diana.settings")
+
+import django
+
+django.setup()
+
+from apps.etruscantombs.models import Author, Image, Place, TypeOfImage
+import requests
+from django.db import models, transaction
 
 # local_folder = sys.args[1]
 # if len(sys.args) == 1:
@@ -77,3 +95,55 @@ def batch_upload(folder):
         if extension == "jpg" and is_tomb_file:
             upload_image(imagepath)
         
+
+def update_image_metadata(sender, instance, **kwargs):
+    """Fetch and update image dimensions from IIIF info.json if not set."""
+    if instance is None:
+        return
+    
+    if (instance.width is None or instance.height is None) and instance.iiif_file:
+        base_url = "https://img.dh.gu.se/diana/static/"
+        iiif_file_url = getattr(instance.iiif_file, 'url', None)
+        if not iiif_file_url:
+            return
+        if not iiif_file_url.startswith("http"):
+            iiif_file_url = base_url + iiif_file_url.lstrip("/")
+        info_url = f"{iiif_file_url}/info.json"
+        try:
+            response = requests.get(info_url, timeout=5)
+            if response.status_code == 200:
+                info = response.json()
+                width = info.get("width")
+                height = info.get("height")
+                # Only update if values are present
+                if width and height:
+                    # Schedule this to run after the current transaction commits
+                    # This ensures M2M fields are saved first
+                    def update_dimensions():
+                        Image.objects.filter(pk=instance.pk).update(width=width, height=height)
+                    
+                    transaction.on_commit(update_dimensions)
+        except Exception as e:
+            # Optionally log the error
+            print(f"Could not fetch IIIF info for image {instance.id}: {e}")
+
+
+def backfill_image_metadata():
+    images = Image.objects.filter(models.Q(width__isnull=True) | models.Q(height__isnull=True))
+    total = images.count()
+    print(f"Checking {total} images for missing metadata")
+
+    for image in images.iterator():
+        update_image_metadata(None, image)
+
+    print("Metadata backfill run completed")
+
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        backfill_image_metadata()
+    elif sys.argv[1] == "upload":
+        if len(sys.argv) < 3:
+            raise SystemExit("Usage: python upload.py upload <folder>")
+        batch_upload(sys.argv[2])
+    else:
+        raise SystemExit("Usage: python upload.py [upload <folder>]")
