@@ -303,8 +303,8 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
     technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.SET_NULL, help_text=_("Technique used to generate the 3D model"))
     scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
 
-    camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
-    look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
+    camera_position = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
+    look_at = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
 
     preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))
 
@@ -332,9 +332,9 @@ class Object3js(abstract.AbstractBaseModel):
     technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.SET_NULL, help_text=_("Technique used to generate the 3D model"))
     scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
     polygons = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Polygons"), help_text=_("number of triangles of the optimized mesh, e.g.: 5 millions"))
-    camera_position = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
-    look_at = ArrayField(models.FloatField(), size=3, default=list, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
-    movement_speed = models.PositiveIntegerField(default=3, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    camera_position = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
+    look_at = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
+    movement_speed = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
     preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))# models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:
