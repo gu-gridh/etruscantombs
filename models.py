@@ -273,7 +273,7 @@ class Object3DHop(abstract.AbstractBaseModel):
     min_max_phi = ArrayField(models.FloatField(), size=2, default=get_min_max_default, verbose_name=_("maximal vertical camera angles"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
     min_max_theta = ArrayField(models.FloatField(), size=2, default=get_min_max_default, verbose_name=_("maximal horizontal camera angles"), help_text=_("Format: 2 comma-separated float numbers, e.g.: 0.0, 1.1"))
 
-    preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))
+    preview_image = models.ImageField(max_length=256, storage=OriginalFileStorage, upload_to='etruscantombs/previewimages/', blank=True, null=True, verbose_name=_("Preview image"))
 # models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
 
@@ -306,7 +306,7 @@ class ObjectPointCloud(abstract.AbstractBaseModel):
     camera_position = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
 
-    preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))
+    preview_image = models.ImageField(max_length=256, storage=OriginalFileStorage, upload_to='etruscantombs/previewimages/', blank=True, null=True, verbose_name=_("Preview image"))# models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -335,7 +335,7 @@ class Object3js(abstract.AbstractBaseModel):
     camera_position = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     look_at = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
     movement_speed = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
-    preview_image = models.ImageField(max_length=256, storage=IIIFFileStorage, upload_to=get_iiif_path, blank=True, null=True, verbose_name=_("Preview image"))# models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
+    preview_image = models.ImageField(max_length=256, storage=OriginalFileStorage, upload_to='etruscantombs/previewimages/', blank=True, null=True, verbose_name=_("Preview image"))# models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.title}"
