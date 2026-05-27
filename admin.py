@@ -122,7 +122,7 @@ class DatasetAdmin(admin.ModelAdmin):
 @admin.register(Object3DHop)
 class Object3DHopAdmin(admin.ModelAdmin):
     list_display = ['get_tombs', 'url_public', 'technique', 'scaled'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
-    search_fields = ['title', 'type']
+    search_fields = ['title', 'tomb__name']
     filter_horizontal = ['tomb', 'author']
 
     def get_tombs(self, obj):
@@ -133,7 +133,7 @@ class Object3DHopAdmin(admin.ModelAdmin):
 @admin.register(ObjectPointCloud)
 class ObjectPointCloudAdmin(admin.ModelAdmin):
     list_display = ['get_tombs', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
-    search_fields = ['title', 'place__name', 'type']
+    search_fields = ['tomb__name', 'title']
     filter_horizontal = ['tomb', 'author']
 
     def get_tombs(self, obj):
@@ -143,7 +143,7 @@ class ObjectPointCloudAdmin(admin.ModelAdmin):
 @admin.register(Object3js)
 class Object3jsAdmin(admin.ModelAdmin):
     list_display = ['get_tombs', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
-    search_fields = ['title', 'place__name', 'type']
+    search_fields = ['tomb__name', 'title']
     filter_horizontal = ['tomb', 'author']
 
     def get_tombs(self, obj):
