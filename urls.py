@@ -17,7 +17,7 @@ router.register(rf'{endpoint}/objectpointcloud', views.ObjectPointcloudViewSet, 
 router.register(rf'{endpoint}/objecttexturedmesh', views.Object3jsViewSet, basename='object textured mesh')
 router.register(rf'{endpoint}/necropolis', views.NecropolisViewSet, basename='necropolis')
 router.register(rf'{endpoint}/sites', views.SiteViewSet, basename='site')
-router.register(rf'{endpoint}/datasets', views.DatasetViewSet, basename='datasets')
+router.register(rf'{endpoint}/dataset', views.DatasetViewSet, basename='datasets')
 router.register(rf'{endpoint}/coordinates', views.PlaceCoordinatesViewSet, basename='coordinates')
 router.register(rf'{endpoint}/boundingbox', views.BoundingBoxView, basename='bounding box')
 

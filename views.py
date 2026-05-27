@@ -415,3 +415,13 @@ class DatasetViewSet(DynamicDepthViewSet):
     queryset = models.Dataset.objects.all().order_by('short_name')
     serializer_class = serializers.DatasetSerializer
     filterset_fields = get_fields(models.Dataset, exclude=DEFAULT_FIELDS)
+
+    def get_queryset(self):
+        queryset = models.Dataset.objects.all().order_by('short_name')
+        tomb_id = self.request.query_params.get('tomb', None)
+
+        if tomb_id is not None:
+
+            queryset = queryset.filter(place__pk__exact=tomb_id).distinct()
+
+        return queryset
