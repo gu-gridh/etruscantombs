@@ -420,8 +420,54 @@ class DatasetViewSet(DynamicDepthViewSet):
         queryset = models.Dataset.objects.all().order_by('short_name')
         tomb_id = self.request.query_params.get('tomb', None)
 
-        if tomb_id is not None:
+        if tomb_id is not None: 
+            queryset = queryset.filter(tomb__pk__exact=tomb_id).distinct()
 
-            queryset = queryset.filter(place__pk__exact=tomb_id).distinct()
+
+        return queryset
+
+
+class DatasetPerTombViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Dataset.objects.all().order_by('short_name')
+    serializer_class = serializers.DatasetSerializer
+    filterset_fields = get_fields(models.Dataset, exclude=DEFAULT_FIELDS)
+
+    def get_queryset(self):
+        queryset = models.Dataset.objects.all().order_by('short_name')
+        tomb_id = self.request.query_params.get('tomb', None)
+
+        if tomb_id is not None:
+            attached_datasets = set()
+            if models.Place.objects.filter(pk__exact = tomb_id).exists():
+
+                tomb_of_interest = models.Place.objects.filter(pk__exact = tomb_id)[0]
+                # find images connected to tomb
+                for image in tomb_of_interest.images.all():
+                    attached_datasets.add(image.dataset.pk)
+                
+                # find textured meshes connected to tomb
+                for texturedmesh in tomb_of_interest.object_3js.all():
+                    attached_datasets.add(texturedmesh.dataset.pk)
+                    
+                # find detailed meshes connected to tomb
+                for detailedmesh in tomb_of_interest.object_3Dhop.all():
+                    attached_datasets.add(detailedmesh.dataset.pk)
+
+                # find pointclouds connected to tomb
+                for pointcloud in tomb_of_interest.object_pointcloud.all():
+                    attached_datasets.add(pointcloud.dataset.pk)
+
+                # find documents connected to tomb
+                for document in tomb_of_interest.documentation.all():
+                    attached_datasets.add(document.dataset.pk)
+
+                # find observations connected to tomb
+                for observation in tomb_of_interest.observation.all():
+                    attached_datasets.add(observation.dataset.pk)
+
+                queryset = queryset.filter(pk__in = attached_datasets).distinct()
+            else:
+                queryset = models.Dataset.objects.none()
 
         return queryset

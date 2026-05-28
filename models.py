@@ -164,7 +164,7 @@ class Place(abstract.AbstractBaseModel):
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("name"), help_text=_("Please enter the name of the tomb"))
     subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"), default = None)
     clone_tombs = models.ManyToManyField("self", blank=True, help_text=_("Add here instances of the same tomb from other datasets."), verbose_name=_("Same as"))
-    dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=1, help_text=_("Datasets in which this tomb was reported."))
+    dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=1, help_text=_("Datasets in which this tomb was reported."), related_name=("tomb"))
     geometry = models.GeometryField(verbose_name=_("geometry"), blank=True, null=True)
     necropolis = models.ForeignKey(Necropolis, null=True, blank=True, on_delete=models.SET_NULL)
     type = models.ForeignKey(TypeOfTomb, on_delete=models.SET_NULL, null=True, blank=True, help_text=_("Type of the tomb"))
