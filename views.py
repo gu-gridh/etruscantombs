@@ -30,13 +30,19 @@ class PlaceGeoViewSet(GeoViewSet):
 
         return super(PlaceGeoViewSet, self).get_serializer(*args, **kwargs)
 
-    filterset_fields = get_fields(models.Place, exclude=DEFAULT_FIELDS + ['geometry', 'threedhop_count', 'pointcloud_count'])
+    filterset_fields = [
+        field for field in get_fields(
+            models.Place,
+            exclude=DEFAULT_FIELDS + ['geometry', 'threedhop_count', 'pointcloud_count']
+        ) if field != 'name'
+    ]
     search_fields = ['placename'] # this does nothing!!
     bbox_filter_field = 'geometry'
     bbox_filter_include_overlapping = True
 
     def get_queryset(self):
         queryset = models.Place.objects.all().order_by('id')
+        name = self.request.query_params.get('name')
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
         site = self.request.query_params.get('site')
@@ -45,6 +51,9 @@ class PlaceGeoViewSet(GeoViewSet):
         minyear = self.request.query_params.get('minyear')
         maxyear = self.request.query_params.get('maxyear')
         
+        if name:
+            queryset = queryset.filter(name__iexact=name)
+
         if with_3D:
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
         if with_plan:
