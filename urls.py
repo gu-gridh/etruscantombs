@@ -15,6 +15,7 @@ router.register(rf'{endpoint}/document', views.DocumentViewSet, basename='docume
 router.register(rf'{endpoint}/objectdetailedmesh', views.Object3DHopViewSet, basename='object detailed mesh')
 router.register(rf'{endpoint}/objectpointcloud', views.ObjectPointcloudViewSet, basename='object point cloud')
 router.register(rf'{endpoint}/objecttexturedmesh', views.Object3jsViewSet, basename='object textured mesh')
+router.register(rf'{endpoint}/panorama', views.PanoramaViewSet, basename='panoramas')
 router.register(rf'{endpoint}/necropolis', views.NecropolisViewSet, basename='necropolis')
 router.register(rf'{endpoint}/sites', views.SiteViewSet, basename='site')
 router.register(rf'{endpoint}/dataset', views.DatasetViewSet, basename='datasets')
@@ -27,9 +28,9 @@ urlpatterns = [
 
     # Automatically generated views
     *utils.get_model_urls('etruscantombs', endpoint, 
-        exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis', 'site', 'datasets', 'coordinates', 'boundingbox']),
+        exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 'necropolis', 'panorama', 'site', 'datasets', 'coordinates', 'boundingbox']),
 
     *utils.get_model_urls('etruscantombs', f'{endpoint}', exclude=['image', 'place', 'document', 'object3dhop', 'objectpointcloud', 
-                                                                   'necropolis', 'site', 'datasets', 'coordinates', 'boundingbox']),
+                                                                   'necropolis', 'panorama', 'site', 'datasets', 'coordinates', 'boundingbox']),
     *documentation
 ]

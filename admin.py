@@ -154,6 +154,16 @@ class Object3jsAdmin(ModelAdmin):
         return ", ".join([tomb.name for tomb in obj.tomb.all()])
     get_tombs.short_description = 'Tombs'
 
+@admin.register(Panorama)
+class PanoramaAdmin(ModelAdmin):
+    list_display = ['get_tombs', 'url_public', 'url_download'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
+    search_fields = ['tomb__name', 'title']
+    filter_horizontal = ['tomb', 'author']
+
+    def get_tombs(self, obj):
+        return ", ".join([tomb.name for tomb in obj.tomb.all()])
+    get_tombs.short_description = 'Tombs'
+
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
     list_display = ['title', 'author', 'size']# [*get_fields(Document, exclude=['id', 'type', 'place'])]

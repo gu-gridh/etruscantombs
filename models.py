@@ -345,6 +345,34 @@ class Object3js(abstract.AbstractBaseModel):
         verbose_name_plural = _("Objects Textured Mesh")
 
 
+class Panorama(abstract.AbstractBaseModel):
+    title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
+    subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"))
+    author = models.ManyToManyField(Author, blank=True)
+    tomb   = models.ManyToManyField(Place, blank=True, related_name="panorama")
+    dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=1, help_text=_("Datasets in which this tomb was reported."))
+    url_public = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for API call"))
+    url_download = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for download"))
+    # url_source = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for source files"))
+    
+    description = RichTextField(null=True, blank=True, help_text=("Descriptive text about the panorama"))
+    date = models.DateField(default=date.today, help_text=_("Date in which the panorama was created"))
+    # technique = models.ForeignKey(Technique3D, null=True, blank=True, on_delete=models.SET_NULL, help_text=_("Technique used to generate the 3D model"))
+    # scaled = models.BooleanField(help_text=_("If the model is scaled, please check the box"), default=False)
+    # polygons = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Polygons"), help_text=_("number of triangles of the optimized mesh, e.g.: 5 millions"))
+    start_position = ArrayField(models.FloatField(), size=3, default=get_list_zeros, help_text=_("Format: 3 comma-separated float numbers, e.g.: 0.0, 1.1, 2.2"))
+    north_offset = models.FloatField(default=0.0, help_text=_("Format: 1 float number, like 0.0 or 3.14"))
+    # movement_speed = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    preview_image = models.ImageField(max_length=256, storage=OriginalFileStorage, upload_to='etruscantombs/previewimages/', blank=True, null=True, verbose_name=_("Preview image"))
+
+    def __str__(self) -> str:
+        return f"{self.title}"
+    
+    class Meta:
+        verbose_name = _("Panorama")
+        verbose_name_plural = _("Panoramas")
+
+
 class Document(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)

@@ -45,6 +45,7 @@ class PlaceGeoViewSet(GeoViewSet):
         name = self.request.query_params.get('name')
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
+        with_panorama = self.request.query_params.get('with_panorama')
         site = self.request.query_params.get('site')
         show_unknown = self.request.query_params.get('show_unknown')
         unknown_id = DEBUG_UNKNOWN_ID
@@ -58,6 +59,8 @@ class PlaceGeoViewSet(GeoViewSet):
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False) | Q(object_threejs__isnull=False)).distinct()
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
+        if with_panorama:
+            queryset = queryset.filter(Q(panorama__isnull=False)).distinct()
         if site:
             queryset = queryset.filter(Q(necropolis__site=site)).distinct()
             
@@ -87,6 +90,7 @@ class TombsInfoViewSet(DynamicDepthViewSet):
         # Query Parameters 
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
+        with_panorama = self.request.query_params.get('with_panorama')
         period = self.request.query_params.get('epoch')
         necropolis = self.request.query_params.get('necropolis')
         type_of_tomb = self.request.query_params.get('type')
@@ -111,6 +115,9 @@ class TombsInfoViewSet(DynamicDepthViewSet):
         if with_plan:
             places = places.filter(Q(images__type_of_image__text__exact="floor plan") 
                                   |Q(images__type_of_image__text__exact="section"))
+
+        if with_panorama:
+            places = places.filter(Q(panorama__isnull=False))
         
         if period:
             places = places.filter(epoch__id=period)           
@@ -181,6 +188,7 @@ class TombsInfoViewSet(DynamicDepthViewSet):
         pointcloud_count = places.filter(id__in=list(models.ObjectPointCloud.objects.all().values_list('tomb', flat=True))).count()
         threejs_count = places.filter(id__in=list(models.Object3js.objects.all().values_list('tomb', flat=True))).count()
         objects_3d = threedhop_count + pointcloud_count + threejs_count
+        panorama_count = places.filter(id__in=list(models.Panorama.objects.all().values_list('tomb', flat=True))).count()
         
         data = {
             'all_tombs': all_tombs,
@@ -188,7 +196,8 @@ class TombsInfoViewSet(DynamicDepthViewSet):
             'hidden_tombs': hidden_tombs,
             'photographs': photographs_count,
             'drawing': plans_count,
-            'objects_3d' : objects_3d
+            'objects_3d' : objects_3d,
+            'panoramas' : panorama_count
         }
 
         return HttpResponse(json.dumps(data))
@@ -203,6 +212,7 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         queryset = models.Place.objects.all().order_by('id')
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
+        with_panorama = self.request.query_params.get('with_panorama')
         oldest_epoch = self.request.query_params.get('oldest_epoch')
         newest_epoch = self.request.query_params.get('newest_epoch')
         show_unknown = self.request.query_params.get('show_unknown')
@@ -214,6 +224,8 @@ class PlaceCoordinatesViewSet(GeoViewSet):
             queryset = queryset.filter(Q(object_threejs__isnull=False)| Q(object_pointcloud__isnull=False)| Q(object_3Dhop__isnull=False)).distinct()
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
+        if with_panorama:
+            queryset = queryset.filter(Q(panorama__isnull=False)).distinct()
             
         if site:
             queryset = queryset.filter(Q(necropolis__site=site)).distinct()
@@ -266,6 +278,7 @@ class BoundingBoxView(GeoViewSet):
         queryset = models.Place.objects.all().order_by('id')
         with_3D = self.request.query_params.get('with_3D')
         with_plan = self.request.query_params.get('with_plan')
+        with_panorama = self.request.query_params.get('with_panorama')
         oldest_epoch = self.request.query_params.get('oldest_epoch')
         newest_epoch = self.request.query_params.get('newest_epoch')
         show_unknown = self.request.query_params.get('show_unknown')
@@ -280,7 +293,8 @@ class BoundingBoxView(GeoViewSet):
             queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False) | Q(object_threejs__isnull=False)).distinct()
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
-            
+        if with_panorama:
+            queryset = queryset.filter(Q(panorama__isnull=False))    
         if site:
             queryset = queryset.filter(Q(necropolis__site=site)).distinct()
             
@@ -391,6 +405,13 @@ class Object3jsViewSet(DynamicDepthViewSet):
     queryset = models.Object3js.objects.all()
     serializer_class = serializers.Object3jsSerializer
     filterset_fields = get_fields(models.Object3js, exclude=DEFAULT_FIELDS+['preview_image', 'camera_position', 'look_at'])
+
+class PanoramaViewSet(DynamicDepthViewSet):
+    
+    queryset = models.Panorama.objects.all()
+    serializer_class = serializers.PanoramaSerializer
+    filterset_fields = get_fields(models.Panorama, exclude=DEFAULT_FIELDS+['preview_image', 'start_position'])
+
 
 class DocumentViewSet(DynamicDepthViewSet):
     

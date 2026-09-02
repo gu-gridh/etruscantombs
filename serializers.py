@@ -22,15 +22,22 @@ class TIFFImageSerializer(DynamicDepthSerializer):
 class PlaceCoordinatesSerializer(GeoFeatureModelSerializer):
     
     has_3D = SerializerMethodField()
+    has_panorama = SerializerMethodField()
 
     class Meta:
         model = Place
-        fields = ['id', 'name', 'dataset', 'has_3D']
+        fields = ['id', 'name', 'dataset', 'has_3D', 'has_panorama']
         geo_field = 'geometry'
         depth = 1
 
     def get_has_3D(self, obj):
         if obj.object_pointcloud.count() > 0 or obj.object_3Dhop.count() > 0 or obj.object_threejs.count() > 0:
+            return True
+        else:
+            return False
+
+    def get_has_panorama(self, obj):
+        if obj.panorama.count() > 0:
             return True
         else:
             return False
@@ -70,6 +77,12 @@ class Object3jsSerializer(DynamicDepthSerializer):
         model = Object3js
         fields = get_fields(Object3js, exclude=DEFAULT_FIELDS)+ ['id']
 
+
+class PanoramaSerializer(DynamicDepthSerializer):
+
+    class Meta:
+        model = Panorama
+        fields = get_fields(Panorama, exclude=DEFAULT_FIELDS)+ ['id']
 
 class DocumentSerializer(DynamicDepthSerializer):
     type_names = SerializerMethodField()
@@ -119,6 +132,7 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
     threedhop_count = SerializerMethodField()
     pointcloud_count = SerializerMethodField()
     threejs_count = SerializerMethodField()
+    panorama_count = SerializerMethodField()
     first_photograph_id = SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
@@ -138,7 +152,7 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
         model = Place
         fields = get_fields(Place, exclude=DEFAULT_FIELDS) + [
             'id', 'photographs_count', 'plans_count', 'threedhop_count',
-            'pointcloud_count', 'threejs_count', 'first_photograph_id'
+            'pointcloud_count', 'threejs_count', 'panorama_count', 'first_photograph_id'
         ]
         geo_field = 'geometry'
         # No default depth here, we want to start with no depth
@@ -159,6 +173,9 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
 
     def get_threejs_count(self, obj):
             return obj.object_threejs.count()
+
+    def get_panorama_count(self, obj):
+                return obj.panorama.count()
     
     def get_first_photograph_id(self, obj):
         
