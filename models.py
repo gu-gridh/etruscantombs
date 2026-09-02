@@ -320,7 +320,7 @@ class Object3js(abstract.AbstractBaseModel):
     title = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("title"))
     subtitle = models.CharField(max_length=1024, null=True, blank=True, verbose_name=_("subtitle"))
     author = models.ManyToManyField(Author, blank=True)
-    tomb   = models.ManyToManyField(Place, blank=True, related_name="object_3js")
+    tomb   = models.ManyToManyField(Place, blank=True, related_name="object_threejs")
     dataset = models.ForeignKey(Dataset, on_delete=models.SET_NULL, null=True, default=1, help_text=_("Datasets in which this tomb was reported."))
     url_public = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for API call"))
     url_download = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("URL for download"))

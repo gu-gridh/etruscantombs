@@ -33,10 +33,10 @@ class PlaceGeoViewSet(GeoViewSet):
     filterset_fields = [
         field for field in get_fields(
             models.Place,
-            exclude=DEFAULT_FIELDS + ['geometry', 'threedhop_count', 'pointcloud_count']
+            exclude=DEFAULT_FIELDS + ['geometry', 'threedhop_count', 'pointcloud_count', 'threejs_count']
         ) if field != 'name'
     ]
-    search_fields = ['placename'] # this does nothing!!
+    search_fields = ['placename'] 
     bbox_filter_field = 'geometry'
     bbox_filter_include_overlapping = True
 
@@ -55,7 +55,7 @@ class PlaceGeoViewSet(GeoViewSet):
             queryset = queryset.filter(name__iexact=name)
 
         if with_3D:
-            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
+            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False) | Q(object_threejs__isnull=False)).distinct()
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
         if site:
@@ -106,7 +106,7 @@ class TombsInfoViewSet(DynamicDepthViewSet):
             places = places.filter(Q(dataset__id__exact=dataset))
         
         if with_3D:
-            places = places.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False))
+            places = places.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False) | Q(object_threejs__isnull=False)).distinct()
         
         if with_plan:
             places = places.filter(Q(images__type_of_image__text__exact="floor plan") 
@@ -179,7 +179,8 @@ class TombsInfoViewSet(DynamicDepthViewSet):
 
         threedhop_count = places.filter(id__in=list(models.Object3DHop.objects.all().values_list('tomb', flat=True))).count()
         pointcloud_count = places.filter(id__in=list(models.ObjectPointCloud.objects.all().values_list('tomb', flat=True))).count()
-        objects_3d = threedhop_count + pointcloud_count
+        threejs_count = places.filter(id__in=list(models.Object3js.objects.all().values_list('tomb', flat=True))).count()
+        objects_3d = threedhop_count + pointcloud_count + threejs_count
         
         data = {
             'all_tombs': all_tombs,
@@ -210,7 +211,7 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         site = self.request.query_params.get('site')
         
         if with_3D:
-            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
+            queryset = queryset.filter(Q(object_threejs__isnull=False)| Q(object_pointcloud__isnull=False)| Q(object_3Dhop__isnull=False)).distinct()
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
             
@@ -276,7 +277,7 @@ class BoundingBoxView(GeoViewSet):
         dataset = self.request.query_params.get('dataset')
         
         if with_3D:
-            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False)).distinct()
+            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False) | Q(object_threejs__isnull=False)).distinct()
         if with_plan:
             queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
             

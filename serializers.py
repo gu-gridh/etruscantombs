@@ -30,7 +30,7 @@ class PlaceCoordinatesSerializer(GeoFeatureModelSerializer):
         depth = 1
 
     def get_has_3D(self, obj):
-        if obj.object_pointcloud.count() > 0 or obj.object_3Dhop.count() > 0:
+        if obj.object_pointcloud.count() > 0 or obj.object_3Dhop.count() > 0 or obj.object_threejs.count() > 0:
             return True
         else:
             return False
@@ -118,6 +118,7 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
     plans_count = SerializerMethodField()
     threedhop_count = SerializerMethodField()
     pointcloud_count = SerializerMethodField()
+    threejs_count = SerializerMethodField()
     first_photograph_id = SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
@@ -137,7 +138,7 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
         model = Place
         fields = get_fields(Place, exclude=DEFAULT_FIELDS) + [
             'id', 'photographs_count', 'plans_count', 'threedhop_count',
-            'pointcloud_count', 'first_photograph_id'
+            'pointcloud_count', 'threejs_count', 'first_photograph_id'
         ]
         geo_field = 'geometry'
         # No default depth here, we want to start with no depth
@@ -155,6 +156,9 @@ class PlaceGeoSerializer(GeoFeatureModelSerializer):
     
     def get_pointcloud_count(self, obj):
         return obj.object_pointcloud.count()
+
+    def get_threejs_count(self, obj):
+            return obj.object_threejs.count()
     
     def get_first_photograph_id(self, obj):
         
