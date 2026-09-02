@@ -25,8 +25,12 @@ DEFAULT_ZOOM = 10
 MAX_ZOOM = 16
 MIN_ZOOM = 5
 
+
+class ModelAdmin(admin.ModelAdmin):
+    save_as = True
+
 @admin.register(Place)
-class PlaceAdmin(LeafletGeoAdmin, admin.ModelAdmin):
+class PlaceAdmin(LeafletGeoAdmin, ModelAdmin):
     display_raw = True
     list_display = ['name', 'subtitle', 'type', 'geometry', 'necropolis'] # 'parent_id'
     search_fields = ['name']
@@ -120,7 +124,7 @@ class DatasetAdmin(admin.ModelAdmin):
 
 
 @admin.register(Object3DHop)
-class Object3DHopAdmin(admin.ModelAdmin):
+class Object3DHopAdmin(ModelAdmin):
     list_display = ['get_tombs', 'url_public', 'technique', 'scaled'] # [*get_fields(Object3DHop, exclude=['id', 'author'])]
     search_fields = ['title', 'tomb__name']
     filter_horizontal = ['tomb', 'author']
@@ -131,7 +135,7 @@ class Object3DHopAdmin(admin.ModelAdmin):
 
 
 @admin.register(ObjectPointCloud)
-class ObjectPointCloudAdmin(admin.ModelAdmin):
+class ObjectPointCloudAdmin(ModelAdmin):
     list_display = ['get_tombs', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
     search_fields = ['tomb__name', 'title']
     filter_horizontal = ['tomb', 'author']
@@ -141,7 +145,7 @@ class ObjectPointCloudAdmin(admin.ModelAdmin):
     get_tombs.short_description = 'Tombs'
 
 @admin.register(Object3js)
-class Object3jsAdmin(admin.ModelAdmin):
+class Object3jsAdmin(ModelAdmin):
     list_display = ['get_tombs', 'url_public', 'technique', 'scaled'] # [*get_fields(ObjectPointCloud, exclude=['id', 'author'])]
     search_fields = ['tomb__name', 'title']
     filter_horizontal = ['tomb', 'author']
