@@ -56,11 +56,14 @@ class PlaceGeoViewSet(GeoViewSet):
             queryset = queryset.filter(name__iexact=name)
 
         if with_3D:
-            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False) | Q(object_threejs__isnull=False)).distinct()
+            queryset = queryset.filter((Q(object_3Dhop__isnull=False) & Q(object_3Dhop__published=True))| 
+                                       (Q(object_pointcloud__isnull=False) & Q(object_pointcloud__published=True)) | 
+                                       (Q(object_threejs__isnull=False) & Q(object_threejs__published=True))).distinct()
+            
         if with_plan:
-            queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
+            queryset = queryset.filter(Q(images__published=True) & (Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section"))).distinct()
         if with_panorama:
-            queryset = queryset.filter(Q(panorama__isnull=False)).distinct()
+            queryset = queryset.filter(Q(panorama__published=True) & Q(panorama__isnull=False)).distinct()
         if site:
             queryset = queryset.filter(Q(necropolis__site=site)).distinct()
             
@@ -110,11 +113,13 @@ class TombsInfoViewSet(DynamicDepthViewSet):
             places = places.filter(Q(dataset__published=True) & Q(dataset__id__exact=dataset)).distinct()
         
         if with_3D:
-            places = places.filter(Q(object_3Dhop__published=True) & (Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False) | Q(object_threejs__isnull=False))).distinct()
+            places = places.filter((Q(object_3Dhop__isnull=False) & Q(object_3Dhop__published=True)) | 
+                                   (Q(object_pointcloud__isnull=False) & Q(object_pointcloud__published=True)) |
+                                   (Q(object_threejs__isnull=False) & Q(object_threejs__published=True))).distinct()
         
         if with_plan:
-            places = places.filter(Q(images__published=True) & (Q(images__type_of_image__text__exact="floor plan") 
-                                  |Q(images__type_of_image__text__exact="section"))).distinct()
+            places = places.filter(Q(images__published=True) & 
+                                   (Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section"))).distinct()
 
         if with_panorama:
             places = places.filter(Q(panorama__published=True) & (Q(panorama__isnull=False))).distinct()
@@ -224,11 +229,14 @@ class PlaceCoordinatesViewSet(GeoViewSet):
         site = self.request.query_params.get('site')
         
         if with_3D:
-            queryset = queryset.filter(Q(object_threejs__isnull=False)| Q(object_pointcloud__isnull=False)| Q(object_3Dhop__isnull=False)).distinct()
+            queryset = queryset.filter((Q(object_threejs__isnull=False) & Q(object_threejs__published=True)) | 
+                                       (Q(object_pointcloud__isnull=False) & Q(object_pointcloud__published=True)) | 
+                                       (Q(object_3Dhop__isnull=False) & Q(object_3Dhop__published=True))).distinct()
         if with_plan:
-            queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
+            queryset = queryset.filter(Q(images__published=True) & 
+                                       (Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section"))).distinct()
         if with_panorama:
-            queryset = queryset.filter(Q(panorama__isnull=False)).distinct()
+            queryset = queryset.filter(Q(panorama__published=True) & Q(panorama__isnull=False)).distinct()
             
         if site:
             queryset = queryset.filter(Q(necropolis__site=site)).distinct()
@@ -293,11 +301,14 @@ class BoundingBoxView(GeoViewSet):
         dataset = self.request.query_params.get('dataset')
         
         if with_3D:
-            queryset = queryset.filter(Q(object_3Dhop__isnull=False)| Q(object_pointcloud__isnull=False) | Q(object_threejs__isnull=False)).distinct()
+            queryset = queryset.filter((Q(object_3Dhop__isnull=False) & Q(object_3Dhop__published=True)) | 
+                                       (Q(object_pointcloud__isnull=False) & Q(object_pointcloud__published=True)) | 
+                                       (Q(object_threejs__isnull=False) & Q(object_threejs__published=True))).distinct()
         if with_plan:
-            queryset = queryset.filter(Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section")).distinct()
+            queryset = queryset.filter(Q(images__published=True) & 
+                                       (Q(images__type_of_image__text__exact="floor plan") | Q(images__type_of_image__text__exact="section"))).distinct()
         if with_panorama:
-            queryset = queryset.filter(Q(panorama__isnull=False))    
+            queryset = queryset.filter(Q(panorama__published=True) & Q(panorama__isnull=False))    
         if site:
             queryset = queryset.filter(Q(necropolis__site=site)).distinct()
             
