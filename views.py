@@ -481,7 +481,7 @@ class DatasetPerTombViewSet(DynamicDepthViewSet):
                     attached_datasets.add(image.dataset.pk)
                 
                 # find textured meshes connected to tomb
-                for texturedmesh in tomb_of_interest.object_3js.all():
+                for texturedmesh in tomb_of_interest.object_threejs.all():
                     attached_datasets.add(texturedmesh.dataset.pk)
                     
                 # find detailed meshes connected to tomb
