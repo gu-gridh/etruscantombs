@@ -172,23 +172,28 @@ class TombsInfoViewSet(DynamicDepthViewSet):
                 places = places.filter(Q(epoch_id=unknown_id))
             
         tombs_shown = places.all().count()
-        hidden_tombs = all_tombs -  tombs_shown
+        hidden_tombs = all_tombs - tombs_shown
 
-        plans_count =  places.filter(id__in=list(
-                            models.Image.objects.filter(Q(type_of_image__text__icontains="floor plan") 
-                                                      | Q (type_of_image__text__icontains="section"))
-                                                        .values_list('tomb', flat=True))).count()
+        tombs_shown_id = places.values_list('id', flat=True)
+
+        plans_count =  models.Image.objects.filter(Q(tomb__id__in=list(tombs_shown_id)) & 
+                                                   (Q(type_of_image__text__icontains="floor plan") | Q(type_of_image__text__icontains="section"))).distinct().count()
+        #places.filter(id__in=list(
+         #                   models.Image.objects.filter(Q(type_of_image__text__icontains="floor plan") 
+          #                                            | Q (type_of_image__text__icontains="section"))
+           #                                             .values_list('tomb', flat=True))).count()
         
-        photographs_count = places.filter(id__in=list(
-                            models.Image.objects.filter(type_of_image__text__icontains="photograph").values_list('tomb', flat=True))
-                            ).count()
+        photographs_count = models.Image.objects.filter(Q(tomb__id__in=list(tombs_shown_id)) & Q(type_of_image__text__icontains="photograph")).distinct().count()
+        #places.filter(id__in=list(
+         #                   models.Image.objects.filter(type_of_image__text__icontains="photograph").values_list('tomb', flat=True))
+          #                  ).count()
         
 
-        threedhop_count = places.filter(id__in=list(models.Object3DHop.objects.all().values_list('tomb', flat=True))).count()
-        pointcloud_count = places.filter(id__in=list(models.ObjectPointCloud.objects.all().values_list('tomb', flat=True))).count()
-        threejs_count = places.filter(id__in=list(models.Object3js.objects.all().values_list('tomb', flat=True))).count()
+        threedhop_count = models.Object3DHop.objects.filter(tomb__id__in=list(tombs_shown_id)).distinct().count() # places.filter(id__in=list(models.Object3DHop.objects.all().values_list('tomb', flat=True))).count()
+        pointcloud_count = models.ObjectPointCloud.objects.filter(tomb__id__in=list(tombs_shown_id)).distinct().count() #places.filter(id__in=list(models.ObjectPointCloud.objects.all().values_list('tomb', flat=True))).count()
+        threejs_count = models.Object3js.objects.filter(tomb__id__in=list(tombs_shown_id)).distinct().count() # places.filter(id__in=list(models.Object3js.objects.all().values_list('tomb', flat=True))).count()
         objects_3d = threedhop_count + pointcloud_count + threejs_count
-        panorama_count = places.filter(id__in=list(models.Panorama.objects.all().values_list('tomb', flat=True))).count()
+        panorama_count = models.Panorama.objects.filter(tomb__id__in=list(tombs_shown_id)).distinct().count()# places.filter(id__in=list(models.Panorama.objects.all().values_list('tomb', flat=True))).count()
         
         data = {
             'all_tombs': all_tombs,
